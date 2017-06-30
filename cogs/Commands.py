@@ -51,7 +51,8 @@ class Commands:
             async for message in self.bot.logs_from(msg.channel, limit):
                 await self.bot.add_reaction(message, emoji)
 
-            self.log.info(f"{msg.author} reacted with {emoji} to "
+            emojiString = emoji.encode("unicode_escape").decode("utf-8")
+            self.log.info(f"{msg.author} reacted with {emojiString} to "
                           f"{limit} messages in {msg.server.name} "
                           f"#{msg.channel.name}.")
 
@@ -69,8 +70,9 @@ class Commands:
                     self.log.error(f"Argument 'emoji' ({emoji}) is not a valid "
                                    "custom emoji.")
             else:
-                self.log.error(f"Argument 'emoji' ({emoji}) is not a valid "
-                               "Unicode emoji.")
+                emojiString = emoji.encode("unicode_escape").decode("utf-8")
+                self.log.error(f"Argument 'emoji' ({emojiString}) is not a "
+                               "valid Unicode emoji.")
 
     @commands.command(pass_context = True)
     async def wc(self,

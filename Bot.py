@@ -3,13 +3,22 @@ import discord
 import logging
 import json
 
-# logging.basicConfig(level = logging.WARNING)
-log = logging.getLogger("bot")
-log.setLevel(logging.INFO)
-handler = logging.StreamHandler()
-handler.setLevel(logging.INFO)
-handler.setFormatter(logging.Formatter("%(asctime)s - [%(levelname)s] %(name)s: %(message)s"))
-log.addHandler(handler)
+# Logging
+lFormat = logging.Formatter("%(asctime)s - [%(levelname)s] %(name)s: %(message)s")
+
+logDiscord = logging.getLogger("discord")
+logDiscord.setLevel(logging.INFO)
+lHandlerDiscord = logging.StreamHandler()
+lHandlerDiscord.setLevel(logging.INFO)
+lHandlerDiscord.setFormatter(lFormat)
+logDiscord.addHandler(lHandlerDiscord)
+
+logBot = logging.getLogger("bot")
+logBot.setLevel(logging.INFO)
+lHandlerBot = logging.StreamHandler()
+lHandlerBot.setLevel(logging.INFO)
+lHandlerBot.setFormatter(lFormat)
+logBot.addHandler(lHandlerBot)
 
 config = dict()
 
@@ -24,11 +33,11 @@ bot = commands.Bot(command_prefix = prefix,
 
 @bot.event
 async def on_ready():
-    log.info(f"Brother Chris logged in as {bot.user.name} ({bot.user.id})")
+    logBot.info(f"Brother Chris logged in as {bot.user.name} ({bot.user.id})")
 
 @bot.event
 async def on_resumed():
-    log.info("Brother Chris resumed.")
+    logBot.info("Brother Chris resumed.")
 
 @bot.event
 async def on_message(message):
@@ -45,7 +54,7 @@ if __name__ == "__main__":
         try:
             bot.load_extension(extension)
         except Exception as e:
-            log.error(f"{extension} failed to load.\n"
-                      f"{type(e).__name__}: {e}")
+            logBot.error(f"{extension} failed to load.\n"
+                         f"{type(e).__name__}: {e}")
 
     bot.run(config["token"], bot = False)
