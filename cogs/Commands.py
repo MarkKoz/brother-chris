@@ -4,7 +4,7 @@ from typing import Callable, Generator
 from wordcloud import WordCloud
 import discord
 import emoji as Emoji
-import os
+import pathlib
 import re
 import sys
 
@@ -84,7 +84,7 @@ class Commands:
         # Generates and posts a word cloud.
         imageFile = await self.getWordCloudImage(channel, user, limit, colour)
         await self.bot.send_file(ctx.message.channel, imageFile)
-        os.remove(imageFile)
+        pathlib.Path.unlink(imageFile)
 
         # Retrieves the word cloud attachment's URL.
         # def check(message: discord.Message) -> bool:
@@ -145,7 +145,7 @@ class Commands:
                                 user: discord.User,
                                 limit: int,
                                 colour: str
-                                ) -> str:
+                                ) -> pathlib.Path:
         def check(message: discord.Message) -> bool:
             return message.author == user
 
@@ -155,11 +155,14 @@ class Commands:
                               background_color = colour,
                               mode = "RGBA"
                               ).generate(text)
-        image = os.path.join(os.path.dirname(sys.modules['__main__'].__file__),
-                             f"wc_temp/wc_{user.id}.png")
-        wordcloud.to_file(image)
 
-        return image
+        path = pathlib.Path(sys.modules['__main__'].__file__).with_name("wc_temp")
+        path.mkdir(parents = True, exist_ok = True)
+        path = path.joinpath(f"wc_{user.id}.png")
+
+        wordcloud.to_file(path)
+
+        return path
 
 def setup(bot):
     bot.add_cog(Commands(bot))
