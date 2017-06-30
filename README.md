@@ -30,7 +30,7 @@ Create `Configuration.json` in the root directory. Fill in your token and user I
 }
 ```
 
-Then create a folder named `wc_temp` in the root directory. Finally, run `Bot.py` to run the bot.
+Run `Bot.py` to run the bot.
 
 ### Requirements
 * [Python 3.6](https://www.python.org/downloads/) or higher

@@ -1,6 +1,15 @@
 from discord.ext import commands
 import discord
+import logging
 import json
+
+# logging.basicConfig(level = logging.WARNING)
+log = logging.getLogger("bot")
+log.setLevel(logging.INFO)
+handler = logging.StreamHandler()
+handler.setLevel(logging.INFO)
+handler.setFormatter(logging.Formatter("%(asctime)s - [%(levelname)s] %(name)s: %(message)s"))
+log.addHandler(handler)
 
 config = dict()
 
@@ -15,13 +24,11 @@ bot = commands.Bot(command_prefix = prefix,
 
 @bot.event
 async def on_ready():
-    print("Brother Chris logged in.\n"
-          f"\tUsername: {bot.user.name}\n"
-          f"\tID: {bot.user.id}\n")
+    log.info(f"Brother Chris logged in as {bot.user.name} ({bot.user.id})")
 
 @bot.event
 async def on_resumed():
-    print("\nBrother Chris resumed.\n")
+    log.info("Brother Chris resumed.")
 
 @bot.event
 async def on_message(message):
@@ -38,7 +45,7 @@ if __name__ == "__main__":
         try:
             bot.load_extension(extension)
         except Exception as e:
-            print(f"Error loading extension {extension}\n"
-                  f"{type(e).__name__}: {e}")
+            log.error(f"{extension} failed to load.\n"
+                      f"{type(e).__name__}: {e}")
 
     bot.run(config["token"], bot = False)
