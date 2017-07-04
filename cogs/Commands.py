@@ -45,15 +45,25 @@ class Commands:
                       f"#{msg.channel.name}.")
 
     @commands.command(pass_context = True)
-    async def react(self, ctx, emoji: str, limit: int = 100):
+    async def react(self, ctx, emoji: str, limit: int, user: discord.User = None):
         msg = ctx.message
         await self.bot.delete_message(msg)
 
-        async def addReactions():
-            async for message in self.bot.logs_from(msg.channel, limit):
+        if user is None:
+            check = None
+        else:
+            def check(message: discord.Message) -> bool:
+                return message.author == user
+
+        async def addReactions(isCustom: bool = False):
+            async for message in self.getMessages(msg.channel, limit, check):
                 await self.bot.add_reaction(message, emoji)
 
-            emojiString = emoji.encode("unicode_escape").decode("utf-8")
+            if isCustom:
+                emojiString = emoji
+            else:
+                emojiString = emoji.encode("unicode_escape").decode("utf-8")
+
             self.log.info(f"{msg.author} reacted with {emojiString} to "
                           f"{limit} messages in {msg.server.name} "
                           f"#{msg.channel.name}.")
@@ -66,7 +76,7 @@ class Commands:
             if match:
                 try:
                     emoji = self.getEmojiCustom(match.group(1))
-                    await addReactions()
+                    await addReactions(True)
                 except discord.InvalidArgument:
                     self.log.error(f"Argument 'emoji' ({emoji}) is not a valid "
                                    "custom emoji.")
@@ -149,8 +159,15 @@ class Commands:
                           limit: int,
                           check: Callable[[discord.Message], bool] = None
                           ) -> Generator[discord.Message, None, None]:
-        async for message in self.bot.logs_from(channel, limit):
-            if check is None or check(message):
+        counter = 0
+        limitLogs = 1000
+
+        if limit > limitLogs:
+            limitLogs = limit
+
+        async for message in self.bot.logs_from(channel, limitLogs):
+            if (check is None or check(message)) and counter != limit:
+                counter += 1
                 yield message
 
     def getEmojiCustom(self, emojiID: str) -> discord.Emoji:

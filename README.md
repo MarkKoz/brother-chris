@@ -11,8 +11,7 @@ An optional argument cannot be passed without also passing all preceding argumen
 
 * `id <user>` - Retrieves IDs for `user`, current channel, and current server.
     * `user` defaults to the caller of the command.
-* `react [emoji] <limit>` - Reacts with `emoji` to a quantity (`limit`) of previous messages in the current channel.
-    * `limit` defaults to 100.
+* `react [emoji] [limit]` - Reacts with `emoji` to a quantity (`limit`) of previous messages in the current channel.
 * `wc <user> <channel> <limit> <colour>` - Generates a word cloud with `colour` as the background based on a quantity (`limit`) of `user`'s messages from `channel`.
     * `user` defaults to the caller of the commands.
     * `channel` defaults to the channel in which the command was called.
