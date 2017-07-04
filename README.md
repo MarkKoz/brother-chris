@@ -9,6 +9,7 @@ An optional argument cannot be passed without also passing all preceding argumen
 
 `[]` denotes mandatory arguments. `<>` denotes optional arguments.<br />
 
+* `icon <user>` - If `user` is specified, retrieves `user`'s avatar. Otherwise, retrieves the current server's icon.
 * `id <user>` - Retrieves IDs for `user`, current channel, and current server.
     * `user` defaults to the caller of the command.
 * `react [emoji] [limit]` - Reacts with `emoji` to a quantity (`limit`) of previous messages in the current channel.

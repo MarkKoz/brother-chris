@@ -18,6 +18,32 @@ class Commands:
         self.emojiCustomPattern = re.compile(r"<:[a-zA-Z0-9_]+:([0-9]+)>$")
 
     @commands.command(pass_context = True)
+    async def icon(self, ctx, user: discord.User = None):
+        msg = ctx.message
+
+        # Deletes the command message.
+        await self.bot.delete_message(msg)
+
+        embed = discord.Embed()
+        embed.colour = discord.Colour(self.getRandomColour())
+
+        if user is not None:
+            embed.title = "User Avatar"
+            embed.description = f"Avatar for {user.mention}."
+            embed.set_image(url = user.avatar_url)
+
+            logMsg = f"{msg.author} requested {user}'s avatar."
+        else:
+            embed.title = "Server Icon"
+            embed.description = f"Server icon for {msg.server.name}."
+            embed.set_image(url = msg.server.icon_url)
+
+            logMsg = f"{msg.author} requested {msg.server.name}'s server icon."
+
+        await self.bot.send_message(destination = msg.channel, embed = embed)
+        self.log.info(logMsg)
+
+    @commands.command(pass_context = True)
     async def id(self, ctx, *, user: discord.User = None):
         msg = ctx.message
 
