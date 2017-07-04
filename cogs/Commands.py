@@ -1,7 +1,7 @@
 from discord.ext import commands
 from emoji import unicode_codes
 from randomcolor import RandomColor
-from typing import Callable, Generator, List
+from typing import Callable, AsyncGenerator, List
 from wordcloud import WordCloud
 import discord
 import logging
@@ -163,7 +163,7 @@ class Commands:
         return int(RandomColor().generate()[0].lstrip('#'), 16)
 
     @staticmethod
-    async def getContents(messages) -> str:
+    async def getContents(messages: AsyncGenerator[discord.Message, None, None]) -> str:
         contents = ""
 
         async for message in messages:
@@ -184,7 +184,7 @@ class Commands:
                           channel: discord.Channel,
                           limit: int,
                           check: Callable[[discord.Message], bool] = None
-                          ) -> Generator[discord.Message, None, None]:
+                          ) -> AsyncGenerator[discord.Message, None, None]:
         counter = 0
         limitLogs = 1000
 
