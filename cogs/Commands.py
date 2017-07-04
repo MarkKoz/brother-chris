@@ -1,9 +1,9 @@
 from discord.ext import commands
+from emoji import unicode_codes
 from randomcolor import RandomColor
-from typing import Callable, Generator
+from typing import Callable, Generator, List
 from wordcloud import WordCloud
 import discord
-import emoji as Emoji
 import logging
 import pathlib
 import re
@@ -14,6 +14,8 @@ class Commands:
         self.bot = bot
         self.log = logging.getLogger("bot.cogs.Commands")
         self.log.info("cogs.Commands loaded successfully.")
+        self.emojiPattern = self.getEmojiPattern()
+        self.emojiCustomPattern = re.compile(r"<:[a-zA-Z0-9_]+:([0-9]+)>$")
 
     @commands.command(pass_context = True)
     async def id(self, ctx, *, user: discord.User = None):
@@ -56,15 +58,14 @@ class Commands:
                           f"{limit} messages in {msg.server.name} "
                           f"#{msg.channel.name}.")
 
-        if Emoji.get_emoji_regexp().fullmatch(emoji):
+        if self.emojiPattern.fullmatch(emoji):
             await addReactions()
         else:
-            pattern = re.compile(r"<:[a-zA-Z0-9_]+:([0-9]+)>$")
-            match = pattern.fullmatch(emoji)
+            match = self.emojiCustomPattern.fullmatch(emoji)
 
             if match:
                 try:
-                    emoji = self.getEmoji(match.group(1))
+                    emoji = self.getEmojiCustom(match.group(1))
                     await addReactions()
                 except discord.InvalidArgument:
                     self.log.error(f"Argument 'emoji' ({emoji}) is not a valid "
@@ -134,6 +135,15 @@ class Commands:
 
         return contents
 
+    @staticmethod
+    def getEmojiPattern():
+        emojis = sorted(unicode_codes.EMOJI_UNICODE.values(),
+                        key = len,
+                        reverse = True) # type: List[str]
+        pattern = u"(" + u"|".join(re.escape(e.replace(u" ", u"")) for e in emojis) + u")"
+
+        return re.compile(pattern)
+
     async def getMessages(self,
                           channel: discord.Channel,
                           limit: int,
@@ -143,7 +153,7 @@ class Commands:
             if check is None or check(message):
                 yield message
 
-    def getEmoji(self, emojiID: str) -> discord.Emoji:
+    def getEmojiCustom(self, emojiID: str) -> discord.Emoji:
         for emoji in self.bot.get_all_emojis():
             if emoji.id == emojiID:
                 return emoji
