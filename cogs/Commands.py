@@ -163,7 +163,7 @@ class Commands:
         return int(RandomColor().generate()[0].lstrip('#'), 16)
 
     @staticmethod
-    async def getContents(messages: AsyncGenerator[discord.Message, None, None]) -> str:
+    async def getContents(messages: AsyncGenerator[discord.Message, None]) -> str:
         contents = ""
 
         async for message in messages:
@@ -184,7 +184,7 @@ class Commands:
                           channel: discord.Channel,
                           limit: int,
                           check: Callable[[discord.Message], bool] = None
-                          ) -> AsyncGenerator[discord.Message, None, None]:
+                          ) -> AsyncGenerator[discord.Message, None]:
         counter = 0
         limitLogs = 1000
 
