@@ -2,17 +2,14 @@ import discord
 import json
 import logging
 
+import cogs.Utils as Utils
+
 class Welcome:
     def __init__(self, bot):
         self.bot = bot
         self.log = logging.getLogger("bot.cogs.Welcome")
         self.log.info("cogs.Welcome loaded successfully.")
-        self.config = self.loadConfig("Welcome")
-
-    @staticmethod
-    def loadConfig(prop: str):
-        with open("Configuration.json") as file:
-            return json.load(file)[prop]
+        self.config = Utils.loadConfig("Welcome")
 
     async def on_message(self, msg: discord.Message):
         if msg.server is None:

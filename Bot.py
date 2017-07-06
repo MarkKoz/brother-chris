@@ -31,35 +31,6 @@ async def on_message(msg: discord.Message):
 
     if msg.author.id in config["idUsers"]:
         await bot.process_commands(msg)
-    elif msg.server.id == "328315460326129675":
-        if re.search(r"\bniggers\b", msg.content, re.IGNORECASE):
-            await suggestWord(msg, True)
-        elif re.search(r"\bnigger\b", msg.content, re.IGNORECASE):
-            await suggestWord(msg)
-
-async def suggestWord(msg: discord.Message, plural: bool = False):
-    if plural:
-        s = "s"
-        i = 1
-    else:
-        s = ""
-        i = 0
-
-    embed = discord.Embed()
-    embed.title = "Word Police"
-    embed.description = f"Stop right there, {msg.author.mention}!\n" \
-                        "Perhaps you meant one of the following words instead?"
-    embed.set_thumbnail(url = "http://clipart-library.com/image_gallery/192486.png")
-    embed.add_field(name = f"{6 + i} Letters",
-                    value = f"bigger{s}\ndigger{s}\njigger{s}\nrigger{s}")
-    embed.add_field(name = f"{7 + i} Letters",
-                    value = f"chigger{s}\nsnigger{s}\nswigger{s}\ntrigger{s}")
-    embed.add_field(name = f"{8 + i} Letters",
-                    value = f"sprigger{s}")
-
-    await bot.send_message(destination = msg.channel, embed = embed)
-    log.info(f"{msg.author} triggered the word police in {msg.server.name} "
-             f"#{msg.channel.name}")
 
 if __name__ == "__main__":
     # Creates loggers.

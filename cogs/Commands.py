@@ -1,6 +1,5 @@
 from discord.ext import commands
 from emoji import unicode_codes
-from randomcolor import RandomColor
 from typing import Callable, AsyncGenerator, List
 from wordcloud import WordCloud
 import discord
@@ -8,6 +7,8 @@ import logging
 import pathlib
 import re
 import sys
+
+import cogs.Utils as Utils
 
 class Commands:
     def __init__(self, bot):
@@ -25,7 +26,7 @@ class Commands:
         await self.bot.delete_message(msg)
 
         embed = discord.Embed()
-        embed.colour = discord.Colour(self.getRandomColour())
+        embed.colour = discord.Colour(Utils.getRandomColour())
 
         if user is not None:
             embed.title = "User Avatar"
@@ -53,7 +54,7 @@ class Commands:
         embed = discord.Embed()
         embed.title = "IDs"
         embed.description = f"IDs for {user.mention}."
-        embed.colour = discord.Colour(self.getRandomColour())
+        embed.colour = discord.Colour(Utils.getRandomColour())
         embed.add_field(name = "User:",
                         value = user.id,
                         inline = False)
@@ -150,17 +151,13 @@ class Commands:
         out = discord.Embed()
         out.title = "Word Cloud"
         out.description = f"Word cloud for {user.mention} in {channel.mention}."
-        out.colour = discord.Colour(self.getRandomColour())
+        out.colour = discord.Colour(Utils.getRandomColour())
         # out.set_image(url = imageURL)
 
         await self.bot.send_message(destination = msg.channel, embed = out)
 
         self.log.info(f"{msg.author} generated a word cloud for {user} in "
                       f"{channel.server.name} #{channel.name}.")
-
-    @staticmethod
-    def getRandomColour() -> int:
-        return int(RandomColor().generate()[0].lstrip('#'), 16)
 
     @staticmethod
     async def getContents(messages: AsyncGenerator[discord.Message, None]) -> str:
