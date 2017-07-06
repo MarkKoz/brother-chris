@@ -5,43 +5,37 @@ import re
 
 import Logging
 
-config = dict()
+# Loads the configuration file.
+with open("Configuration.json") as file:
+    config = json.load(file)["Bot"]
 
-prefix = ['?', '!']
-description = "Brother Chris"
-help_attrs = dict(hidden = True)
-bot = commands.Bot(command_prefix = prefix,
-                   description = description,
+name = config["name"]
+bot = commands.Bot(command_prefix = config["prefixes"],
+                   description = name,
                    self_bot = True,
                    pm_help = None,
-                   help_attrs = help_attrs)
+                   help_attrs = dict(hidden = True))
 
 @bot.event
 async def on_ready():
-    log.info(f"Brother Chris logged in as {bot.user.name} ({bot.user.id})")
+    log.info(f"{name} logged in as {bot.user.name} ({bot.user.id})")
 
 @bot.event
 async def on_resumed():
-    log.info("Brother Chris resumed.")
+    log.info(f"{name} resumed.")
 
 @bot.event
 async def on_message(msg: discord.Message):
-    # if message.author.bot
-    if msg.server is not None:
-        if msg.author.id == config["id_user"]:
-            await bot.process_commands(msg)
-        elif msg.server.id == "328315460326129675":
-            if re.search(r"(?<!\w)niggers(?!\w)", msg.content, re.IGNORECASE):
-                await suggestWord(msg, True)
-            elif re.search(r"(?<!\w)nigger(?!\w)", msg.content, re.IGNORECASE):
-                await suggestWord(msg)
-            elif msg.channel.id == "328315460326129675" and \
-                 msg.author.id == "155149108183695360" and \
-                 "joined the server! Give them a welcome!" in msg.content:
-                await bot.send_message(msg.channel,
-                                       f"Welcome {msg.mentions[0].mention}!")
-                log.info(f"Welcomed {msg.mentions[0]} in {msg.server.name} "
-                         f"#{msg.channel.name}")
+    if msg.server is None:
+        return
+
+    if msg.author.id in config["idUsers"]:
+        await bot.process_commands(msg)
+    elif msg.server.id == "328315460326129675":
+        if re.search(r"\bniggers\b", msg.content, re.IGNORECASE):
+            await suggestWord(msg, True)
+        elif re.search(r"\bnigger\b", msg.content, re.IGNORECASE):
+            await suggestWord(msg)
 
 async def suggestWord(msg: discord.Message, plural: bool = False):
     if plural:
@@ -68,7 +62,7 @@ async def suggestWord(msg: discord.Message, plural: bool = False):
              f"#{msg.channel.name}")
 
 if __name__ == "__main__":
-    # Logging
+    # Creates loggers.
     strFormat = "%(asctime)s - [%(levelname)s] %(name)s: %(message)s"
     handler = Logging.StreamFiltered(re.compile(r"Unhandled event",
                                                 re.IGNORECASE))
@@ -76,9 +70,7 @@ if __name__ == "__main__":
     loggerDiscord = Logging.Logger("discord", strFormat, handler)
     log = loggerBot.log
 
-    with open("Configuration.json") as file:
-        config = json.load(file)
-
+    # Loads extensions.
     for extension in config["extensions"]:
         try:
             bot.load_extension(extension)
@@ -88,5 +80,6 @@ if __name__ == "__main__":
 
     bot.run(config["token"], bot = False)
 
+    # Closes and removes logging handlers.
     loggerBot.close()
     loggerDiscord.close()
