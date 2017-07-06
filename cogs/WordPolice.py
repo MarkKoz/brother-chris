@@ -38,7 +38,6 @@ class WordPolice:
             else:
                 out[length].append(string)
 
-        print(out)
         return out
 
     async def sendMessage(self, msg: discord.Message, word: str):
@@ -47,7 +46,7 @@ class WordPolice:
         embed.description = f"Stop right there, {msg.author.mention}!\n" \
                             "Perhaps you meant one of the following words instead?"
         embed.colour = Utils.getRandomColour()
-        embed.set_thumbnail(url = "http://clipart-library.com/image_gallery/192486.png")
+        embed.set_thumbnail(url = self.config["thumbnail"])
 
         for i, length in enumerate(self.splitByLength(self.config["words"][word])):
             if length is not None:
