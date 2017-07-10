@@ -48,7 +48,7 @@ class WordPolice:
         embed.colour = Utils.getRandomColour()
         embed.set_thumbnail(url = self.config["thumbnail"])
 
-        for i, length in enumerate(self.splitByLength(self.config["words"][word])):
+        for i, length in enumerate(self.splitByLength(self.config["words"][word.lower()])):
             if length is not None:
                 value = None
 

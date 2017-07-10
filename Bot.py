@@ -1,14 +1,12 @@
 from discord.ext import commands
 import discord
-import json
 import re
 
 import Logging
+import cogs.Utils as Utils
 
 # Loads the configuration file.
-with open("Configuration.json") as file:
-    config = json.load(file)["Bot"]
-
+config = Utils.loadConfig("Bot")
 name = config["name"]
 bot = commands.Bot(command_prefix = config["prefixes"],
                    description = name,
@@ -18,7 +16,7 @@ bot = commands.Bot(command_prefix = config["prefixes"],
 
 @bot.event
 async def on_ready():
-    log.info(f"{name} logged in as {bot.user.name} ({bot.user.id})")
+    log.info(f"{name} logged in as {bot.user} ({bot.user.id})")
 
 @bot.event
 async def on_resumed():
@@ -26,9 +24,11 @@ async def on_resumed():
 
 @bot.event
 async def on_message(msg: discord.Message):
+    # Ignores direct/private messages.
     if msg.server is None:
         return
 
+    # Only processes commands if called by users as specified in the config.
     if msg.author.id in config["idUsers"]:
         await bot.process_commands(msg)
 
@@ -46,8 +46,8 @@ if __name__ == "__main__":
         try:
             bot.load_extension(extension)
         except Exception as e:
-            log.log.error(f"{extension} failed to load.\n"
-                          f"{type(e).__name__}: {e}")
+            log.error(f"{extension} failed to load.\n"
+                      f"{type(e).__name__}: {e}")
 
     bot.run(config["token"], bot = False)
 
