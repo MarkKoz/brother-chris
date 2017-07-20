@@ -1,5 +1,4 @@
 import discord
-import json
 import logging
 
 import cogs.Utils as Utils
