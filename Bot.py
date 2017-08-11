@@ -1,4 +1,5 @@
 from discord.ext import commands
+from typing import Pattern
 import discord
 import re
 
@@ -6,13 +7,15 @@ import Logging
 import cogs.Utils as Utils
 
 # Loads the configuration file.
-config = Utils.loadConfig("Bot")
-name = config["name"]
-bot = commands.Bot(command_prefix = config["prefixes"],
-                   description = name,
-                   self_bot = True,
-                   pm_help = None,
-                   help_attrs = dict(hidden = True))
+config: dict = Utils.loadConfig("Bot")
+name: str = config["name"]
+isSelfBot: bool = config["isSelfBot"]
+
+bot: commands.Bot = commands.Bot(command_prefix = config["prefixes"],
+                                 description = name,
+                                 self_bot = isSelfBot,
+                                 pm_help = None,
+                                 help_attrs = dict(hidden = True))
 
 @bot.event
 async def on_ready():
@@ -34,11 +37,12 @@ async def on_message(msg: discord.Message):
 
 if __name__ == "__main__":
     # Creates loggers.
-    strFormat = "%(asctime)s - [%(levelname)s] %(name)s: %(message)s"
-    handler = Logging.StreamFiltered(re.compile(r"Unhandled event",
-                                                re.IGNORECASE))
-    loggerBot = Logging.Logger("bot", strFormat)
-    loggerDiscord = Logging.Logger("discord", strFormat, handler)
+    strFormat: str = "%(asctime)s - [%(levelname)s] %(name)s: %(message)s"
+    pattern: Pattern = re.compile(r"Unhandled event", re.IGNORECASE)
+    handler: Logging.StreamFiltered = Logging.StreamFiltered(pattern)
+
+    loggerBot: Logging.Logger = Logging.Logger("bot", strFormat)
+    loggerDiscord: Logging.Logger = Logging.Logger("discord", strFormat, handler)
     log = loggerBot.log
 
     # Loads extensions.
@@ -49,7 +53,7 @@ if __name__ == "__main__":
             log.error(f"{extension} failed to load.\n"
                       f"{type(e).__name__}: {e}")
 
-    bot.run(config["token"], bot = False)
+    bot.run(config["token"], bot = not isSelfBot) # Starts the bot.
 
     # Closes and removes logging handlers.
     loggerBot.close()

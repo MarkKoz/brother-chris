@@ -1,3 +1,4 @@
+from typing import List, Pattern
 import logging
 import re
 
@@ -6,30 +7,27 @@ class Logger:
                  name: str,
                  strFormat: str,
                  handler: logging.Handler = logging.StreamHandler()):
-        # sys.stderr = self.StreamFiltered(filter, sys.stderr)
-        # sys.stdout = self.StreamFiltered(filter, sys.stdout)
-
-        self.log = logging.getLogger(name)
+        self.log: logging.Logger = logging.getLogger(name)
         self.log.setLevel(logging.INFO)
 
-        self.handler = handler
+        self.handler: logging.Handler = handler
         self.handler.setLevel(logging.INFO)
         self.handler.setFormatter(logging.Formatter(strFormat))
 
         self.log.addHandler(self.handler)
 
     def close(self):
-        handlers = self.log.handlers[:]
+        handlers: List[logging.Handler] = self.log.handlers[:]
 
         for handler in handlers:
             handler.close()
             self.log.removeHandler(handler)
 
 class StreamFiltered(logging.StreamHandler):
-    def __init__(self, pattern):
-        self.pattern = pattern
+    def __init__(self, pattern: Pattern):
+        self.pattern: Pattern = pattern
         logging.StreamHandler.__init__(self)
 
-    def emit(self, record):
+    def emit(self, record: logging.LogRecord):
         if re.search(self.pattern, record.getMessage()) is None:
             logging.StreamHandler.emit(self, record)

@@ -1,14 +1,16 @@
+from discord.ext import commands
+from typing import Dict
 import discord
 import logging
 
 import cogs.Utils as Utils
 
 class Welcome:
-    def __init__(self, bot):
-        self.bot = bot
-        self.log = logging.getLogger("bot.cogs.Welcome")
+    def __init__(self, bot: commands.Bot):
+        self.bot: commands.Bot = bot
+        self.log: logging.Logger = logging.getLogger("bot.cogs.Welcome")
         self.log.info("cogs.Welcome loaded successfully.")
-        self.config = Utils.loadConfig("Welcome")
+        self.config: Dict = Utils.loadConfig("Welcome")
 
     async def on_message(self, msg: discord.Message):
         if msg.server is None:
@@ -22,5 +24,5 @@ class Welcome:
             self.log.info(f"Welcomed {msg.mentions[0]} in {msg.server.name} "
                           f"#{msg.channel.name}")
 
-def setup(bot):
+def setup(bot: commands.Bot):
     bot.add_cog(Welcome(bot))
