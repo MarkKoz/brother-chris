@@ -38,19 +38,13 @@ class WordPolice:
         return re.compile(pattern, re.IGNORECASE)
 
     @staticmethod
-    def splitByLength(lst: List[str]) -> List[Union[List[str], None]]:
+    def splitByLength(lst: List[str]) -> Dict[int, List[str]]:
         """
         Splits a list of strings into separate lists which are grouped based on
         the length of the strings.
 
-        These lists are then stored into a list which can be accessed by an
-        index which is equivalent to the length of the words of the list at that
-        index.
-
-        If no strings of a length equivalent to a given index exist, then the
-        object at that index will be None.
-
-        Maximum supported string length is 16 characters.
+        These lists are mapped to a dictionary, where the keys are the lengths
+        and the values are the lists of strings.
 
         Parameters
         ----------
@@ -59,24 +53,51 @@ class WordPolice:
 
         Returns
         -------
-        List[Union[List[str], None]]
-            A list of the lists of split words.
+        Dict[int, List[str]]
+            A dictionary of lengths and lists of strings which are of those
+            lengths.
         """
-        # TODO: Remove hard-coded character limit.
-        # TODO: Output a dictionary instead of a list.
-        out: List[Union[List[str], None]] = [None] * 16
+        # TODO: Sort strings alphabetically.
+        out: Dict[int, List[str]] = dict()
 
+        string: str
         for string in lst:
             length: int = len(string)
 
-            if out[length] is None:
+            # Checks if there are no strings stored for the length of the
+            # current string.
+            if length not in out.keys():
+                # Creates a new list containing the current string.
                 out[length] = [string]
             else:
+                # Appends to the list which was created above at some earlier
+                # point.
                 out[length].append(string)
 
         return out
 
     async def sendMessage(self, msg: discord.Message, word: str):
+        """
+        Creates and sends an embed which suggests possible alternatives for the
+        word which triggered the Word Police.
+
+        Parameters
+        ----------
+        msg: discord.Message
+            The message which triggered the Word Police.
+        word: str
+            The word which triggered the Word Police.
+        Returns
+        -------
+        None
+
+        See Also
+        -------
+        discord.Client.send_message()
+        discord.Embed()
+        WordPolice.splitByLength()
+
+        """
         embed: discord.Embed = discord.Embed()
         embed.title = "Word Police"
         embed.description = f"Stop right there, {msg.author.mention}!\n" \
@@ -85,20 +106,18 @@ class WordPolice:
         embed.colour = Utils.getRandomColour()
         embed.set_thumbnail(url = self.config["thumbnail"])
 
-        i: int
+        suggestions = self.splitByLength(self.config["words"][word.lower()])
+
         length: int
-        for i, length in enumerate(self.splitByLength(self.config["words"][word.lower()])):
-            if length is not None:
-                value: str = None
+        lst: List[str]
+        for length, lst in suggestions.items():
+            value: str = ""
 
-                for suggestion in length:
-                    if value is None:
-                        value = suggestion
-                    else:
-                        value += "\n" + suggestion
+            for suggestion in lst:
+                value += "\n" + suggestion
 
-                embed.add_field(name = f"{i} Letters",
-                                value = value)
+            embed.add_field(name = f"{length} Letters",
+                            value = value)
 
         await self.bot.send_message(destination = msg.channel, embed = embed)
         self.log.info(f"{msg.author} triggered the word police in "
@@ -109,7 +128,7 @@ class WordPolice:
         An event handler for sent messages.
 
         Determines if the message sent contains a word in the list of words in
-        the configuration for WordPolice.
+        the configuration for WordPolice. If it does, sendMessage() is called.
 
         Parameters
         ----------
@@ -122,7 +141,8 @@ class WordPolice:
 
         See Also
         --------
-        getPattern()
+        WordPolice.getPattern()
+        WordPolice.sendMessage()
         """
         # Ignores direct messages.
         if msg.server is None:
