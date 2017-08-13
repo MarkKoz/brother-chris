@@ -134,8 +134,9 @@ class WordPolice:
         """
         Called when a message is created and sent to a server.
 
-        Determines if the message sent contains a word in the list of words in
-        the configuration for WordPolice. If it does, sendMessage() is called.
+        Determines if the message sent contains words in the list of words in
+        the configuration for WordPolice. If it does, sendMessage() is called
+        for every unique match.
 
         Parameters
         ----------
@@ -155,12 +156,14 @@ class WordPolice:
         if msg.server is None:
             return
 
-        # Searches the message with the regular expression.
+        # Only processes messages which come from the servers specified in the
+        # configuration.
         if msg.server.id in self.config["idServers"]:
-            match: Match = re.search(self.pattern, msg.content)
+            matches: List[str] = re.findall(self.pattern, msg.content)
 
-            if match:
-                await self.sendMessage(msg, match.group(1))
+            # Iterates through every unique match in order of appearance.
+            for match in dict.fromkeys(matches):
+                await self.sendMessage(msg, match)
 
 
 def setup(bot: commands.Bot):
