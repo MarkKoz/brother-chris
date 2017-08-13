@@ -19,14 +19,49 @@ bot: commands.Bot = commands.Bot(command_prefix = config["prefixes"],
 
 @bot.event
 async def on_ready():
+    """
+    Called when the client is done preparing the data received from Discord.
+    Usually after login is successful and the Client.servers and co. are filled
+    up.
+
+    Note
+    -------
+    This function is not guaranteed to be the first event called. Likewise, this
+    function is not guaranteed to only be called once. This library implements
+    reconnection logic and thus will end up calling this event whenever a RESUME
+    request fails.
+
+    Returns
+    -------
+    None
+    """
     log.info(f"{name} logged in as {bot.user} ({bot.user.id})")
 
 @bot.event
 async def on_resumed():
+    """
+    Called when the client has resumed a session.
+
+    Returns
+    -------
+    None
+    """
     log.info(f"{name} resumed.")
 
 @bot.event
 async def on_message(msg: discord.Message):
+    """
+    Called when a message is created and sent to a server.
+
+    Parameters
+    ----------
+    msg: discord.Message
+        The message the creation of which called this event.
+
+    Returns
+    -------
+    None
+    """
     # Ignores direct/private messages.
     if msg.server is None:
         return

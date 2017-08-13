@@ -1,5 +1,5 @@
 from discord.ext import commands
-from typing import Dict, List, Match, Pattern, Union
+from typing import Dict, List, Match, Pattern
 import discord
 import logging
 import re
@@ -12,12 +12,18 @@ class WordPolice:
         self.log: logging.Logger = logging.getLogger("bot.cogs.WordPolice")
         self.log.info("cogs.WordPolice loaded successfully.")
         self.config: Dict = Utils.loadConfig("WordPolice")
-        self.pattern = self.getPattern()
+        self.pattern = self.getPattern(self.config["words"])
 
-    def getPattern(self) -> Pattern:
+    @staticmethod
+    def getPattern(lst: List[str]) -> Pattern:
         """
-        Creates a regular expression pattern that will match any word from the
-        list of words in the configuration for WordPolice.
+        Creates a regular expression pattern that will match any string from the
+        passed list of strings.
+
+        Parameters
+        ----------
+        lst: List[str]
+            A list of strings from which to create the pattern.
 
         Returns
         -------
@@ -26,12 +32,13 @@ class WordPolice:
         """
         pattern = None
 
-        word: str
-        for word in self.config["words"]:
+        string: str
+        for string in lst:
             if pattern is None:
-                pattern = r"(\b" + word + r"\b"
+                # Adds an opening parenthesis before the first string.
+                pattern = r"(\b" + string + r"\b"
             else:
-                pattern += r"|\b" + re.escape(word) + r"\b"
+                pattern += r"|\b" + re.escape(string) + r"\b"
 
         pattern += r")"
 
@@ -106,7 +113,7 @@ class WordPolice:
         embed.colour = Utils.getRandomColour()
         embed.set_thumbnail(url = self.config["thumbnail"])
 
-        suggestions = self.splitByLength(self.config["words"][word.lower()])
+        suggestions: Dict[int, List[str]] = self.splitByLength(self.config["words"][word.lower()])
 
         length: int
         lst: List[str]
@@ -125,7 +132,7 @@ class WordPolice:
 
     async def on_message(self, msg: discord.Message):
         """
-        An event handler for sent messages.
+        Called when a message is created and sent to a server.
 
         Determines if the message sent contains a word in the list of words in
         the configuration for WordPolice. If it does, sendMessage() is called.
@@ -133,7 +140,7 @@ class WordPolice:
         Parameters
         ----------
         msg: discord.Message
-            The sent message which triggered this event handler.
+            The message the creation of which called this event.
 
         Returns
         -------
