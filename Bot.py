@@ -20,9 +20,9 @@ bot: commands.Bot = commands.Bot(command_prefix = config["prefixes"],
 @bot.event
 async def on_ready():
     """
-    Called when the client is done preparing the data received from Discord.
-    Usually after login is successful and the Client.servers and co. are filled
-    up.
+    Called when the :class:`client<discord.Client>` is done preparing the data
+    received from Discord. Usually after login is successful and the
+    Client.servers and co. are filled up.
 
     Note
     -------
@@ -40,7 +40,7 @@ async def on_ready():
 @bot.event
 async def on_resumed():
     """
-    Called when the client has resumed a session.
+    Called when the :class:`client<discord.Client>` has resumed a session.
 
     Returns
     -------
@@ -51,7 +51,8 @@ async def on_resumed():
 @bot.event
 async def on_message(msg: discord.Message):
     """
-    Called when a message is created and sent to a server.
+    Called when a :class:`message<discord.Message>` is created and sent to a
+    server.
 
     Parameters
     ----------
@@ -76,8 +77,8 @@ if __name__ == "__main__":
     pattern: Pattern = re.compile(r"Unhandled event", re.IGNORECASE)
     handler: Logging.StreamFiltered = Logging.StreamFiltered(pattern)
 
-    loggerBot: Logging.Logger = Logging.Logger("bot", strFormat)
-    loggerDiscord: Logging.Logger = Logging.Logger("discord", strFormat, handler)
+    loggerBot: Logging.LoggerProxy = Logging.LoggerProxy("bot", strFormat)
+    loggerDiscord: Logging.LoggerProxy = Logging.LoggerProxy("discord", strFormat, handler)
     log = loggerBot.log
 
     # Loads extensions.

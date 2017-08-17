@@ -1,5 +1,5 @@
 from discord.ext import commands
-from typing import Dict, List, Match, Pattern
+from typing import Dict, List, Pattern
 import discord
 import logging
 import re
@@ -7,6 +7,11 @@ import re
 import cogs.Utils as Utils
 
 class WordPolice:
+    """
+    Sends a message with word suggestions when a blacklisted word is found in a
+    sent message.
+    """
+
     def __init__(self, bot: commands.Bot):
         self.bot: commands.Bot = bot
         self.log: logging.Logger = logging.getLogger("bot.cogs.WordPolice")
@@ -17,8 +22,8 @@ class WordPolice:
     @staticmethod
     def getPattern(lst: List[str]) -> Pattern:
         """
-        Creates a regular expression pattern that will match any string from the
-        passed list of strings.
+        Creates a regular expression :class:`Pattern` that will match any
+        :class:`string<str>` from :any:`lst`.
 
         Parameters
         ----------
@@ -30,7 +35,7 @@ class WordPolice:
         Pattern
             The compiled regular expression pattern.
         """
-        pattern = None
+        pattern: str = None
 
         string: str
         for string in lst:
@@ -47,11 +52,11 @@ class WordPolice:
     @staticmethod
     def splitByLength(lst: List[str]) -> Dict[int, List[str]]:
         """
-        Splits a list of strings into separate lists which are grouped based on
-        the length of the strings.
+        Splits :any:`lst` into separate :class:`lists<list>` which are grouped
+        based on the length of the :class:`strings<str>`.
 
-        These lists are mapped to a dictionary, where the keys are the lengths
-        and the values are the lists of strings.
+        These lists are mapped to a :class:`dictionary<dict>`, where the keys
+        are the lengths and the values are the lists of strings.
 
         Parameters
         ----------
@@ -85,8 +90,8 @@ class WordPolice:
 
     async def sendMessage(self, msg: discord.Message, word: str):
         """
-        Creates and sends an embed which suggests possible alternatives for the
-        word which triggered the Word Police.
+        Creates and sends an :class:`embed<discord.Embed>` which suggests
+        possible alternatives for the word which triggered the Word Police.
 
         Parameters
         ----------
@@ -103,7 +108,6 @@ class WordPolice:
         discord.Client.send_message()
         discord.Embed()
         WordPolice.splitByLength()
-
         """
         embed: discord.Embed = discord.Embed()
         embed.title = "Word Police"
@@ -132,11 +136,12 @@ class WordPolice:
 
     async def on_message(self, msg: discord.Message):
         """
-        Called when a message is created and sent to a server.
+        Called when a :class:message`<discord.Message>` is created and sent to a
+        server.
 
         Determines if the message sent contains words in the list of words in
-        the configuration for WordPolice. If it does, sendMessage() is called
-        for every unique match.
+        the configuration for WordPolice. If it does, :func:`sendMessage` is
+        called for every unique match.
 
         Parameters
         ----------
