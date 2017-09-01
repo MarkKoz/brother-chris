@@ -1,23 +1,34 @@
 from discord.ext import commands
-from typing import Dict
+from enum import Enum
+from typing import Dict, List, NamedTuple
 import discord
 import logging
 
 import cogs.Utils as Utils
 
+class Category(Enum):
+    GENERAL: int = discord.Permissions().general().value
+    TEXT: int = discord.Permissions().text().value
+    VOICE: int = discord.Permissions().voice().value
+
+class Permission(NamedTuple):
+    name: str
+    value: bool
+    category: Category
+
 class Permissions:
-    def __init__(self, bot):
-        self.bot = bot
-        self.log = logging.getLogger("bot.cogs.Permissions")
+    def __init__(self, bot: commands.Bot):
+        self.bot: commands.Bot = bot
+        self.log: logging.Logger = logging.getLogger("bot.cogs.Permissions")
         self.log.info("cogs.Permissions loaded successfully.")
-        self.config = Utils.loadConfig("Permissions")
+        self.config: Dict = Utils.loadConfig("Permissions")
 
     @commands.command(pass_context = True)
     async def perms(self,
                     ctx,
                     user: discord.User = None,
                     channel: discord.Channel = None):
-        msg = ctx.message
+        msg: discord.Message = ctx.message
 
         if user is None:
             user = msg.author
@@ -28,31 +39,28 @@ class Permissions:
         # Deletes the command message.
         await self.bot.delete_message(msg)
 
-        perms = {"General": self.getDict(discord.Permissions().general()),
-                 "Text": self.getDict(discord.Permissions().text()),
-                 "Voice": self.getDict(discord.Permissions().voice())
-                 } # type: Dict[str, Dict[str, bool]]
+        perms: List[Permission] = self.getList(msg.channel.permissions_for(msg.author))
 
         if self.config["justify"]:
-            width = self.getWidthMax(perms, self.config["padding"])
+            width: int = self.getWidthMax(perms, self.config["padding"])
         else:
-            width = 0
+            width: int = 0
 
-        embed = discord.Embed()
+        embed: discord.Embed = discord.Embed()
         embed.colour = discord.Colour(Utils.getRandomColour())
         embed.title = "Member Permissions"
         embed.description = f"Permissions for {user.mention} in {channel.mention}."
 
         embed.add_field(name = "General Permissions",
-                        value = self.getString(perms, "General", width),
+                        value = self.getString(perms, Category.GENERAL, width),
                         inline = False)
 
         embed.add_field(name = "Text Permissions",
-                        value = self.getString(perms, "Text", width),
+                        value = self.getString(perms, Category.TEXT, width),
                         inline = False)
 
         embed.add_field(name = "Voice Permissions",
-                        value = self.getString(perms, "Voice", width),
+                        value = self.getString(perms, Category.VOICE, width),
                         inline = False)
 
         await self.bot.send_message(destination = msg.channel, embed = embed)
@@ -60,35 +68,42 @@ class Permissions:
                       f"#{channel.name} in {msg.server.name} "
                       f"#{msg.channel.name}.")
 
-    @staticmethod
-    def getDict(perms: discord.Permissions) -> Dict[str, bool]:
-        d = {} # type: Dict[str, bool]
+    def getList(self, perms: discord.Permissions) -> List[Permission]:
+        lst: List[Permission] = []
 
+        # Iterates through every permission. perm is the name of the
+        # permission's respective attribute in discord.Permissions.
         for perm, value in perms:
-            if value:
-                d[perm] = value
+            # Creates a Permissions object with no bits set for the purpose of
+            # comparison.
+            p: discord.Permissions = discord.Permissions().none()
 
-        return d
+            # Updates the bit that corresponds to the current permission in the
+            # loop iteration.
+            p.update(**{perm: True})
+
+            # Iterates through every permission category.
+            cat: int
+            for cat in Category:
+                # Compares the value of the enum, which is the raw bit array
+                # field of the permission category, against the bit of the
+                # comparison object. If the bit is set in both objects, then the
+                # current category is the permission's category.
+                if cat.value & p.value != 0:
+                    lst.append(Permission(perm, value, cat))
+
+        return lst
 
     @staticmethod
-    def getString(perms: Dict[str, Dict[str, bool]],
-                  category: str,
+    def getString(perms: List[Permission],
+                  category: Category,
                   width: int) -> str:
-        print(f"Width: {width}")
-        # Avoids appending newline to first item.
-        key, value = perms[category].popitem()
-        # string = f"{key} `{value}`"
-        string = f"{key.ljust(width)} `{value}`"
-
-        for key, value in perms[category].items():
-            string += f"\n{key.ljust(width)} `{value}`"
-
-        return string
+        return "".join(f"{p.name.ljust(width)} `{p.value}`\n"
+                       for p in perms if p.category == category)
 
     @staticmethod
-    def getWidthMax(d: Dict[any, Dict[str, any]], padding: int) -> int:
-        return max(len(key) for value in d.values()
-                   for key in value.keys()) + padding
+    def getWidthMax(perms: List[Permission], padding: int) -> int:
+        return max(len(p.name) for p in perms) + padding
 
-def setup(bot):
+def setup(bot: commands.Bot):
     bot.add_cog(Permissions(bot))
