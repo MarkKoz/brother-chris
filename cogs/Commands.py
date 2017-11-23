@@ -46,6 +46,21 @@ class Commands:
         self.log.info(logMsg)
 
     @commands.command(pass_context = True)
+    async def emojiurl(self, ctx, emoji: str):
+        msg: discord.Message = ctx.message
+        await self.bot.delete_message(msg)
+
+        match: Match = self.emojiCustomPattern.fullmatch(emoji)
+
+        if match:
+            try:
+                emoji: discord.Emoji = self.getEmojiCustom(match.group(1))
+                await self.bot.send_message(msg.channel, emoji.url)
+            except discord.InvalidArgument:
+                self.log.error(f"Argument 'emoji' ({emoji}) is not a valid "
+                               "custom emoji.")
+
+    @commands.command(pass_context = True)
     async def id(self, ctx, *, user: discord.User = None):
         msg: discord.Message = ctx.message
 

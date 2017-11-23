@@ -68,7 +68,8 @@ class Permissions:
                       f"#{channel.name} in {msg.server.name} "
                       f"#{msg.channel.name}.")
 
-    def getList(self, perms: discord.Permissions) -> List[Permission]:
+    @staticmethod
+    def getList(perms: discord.Permissions) -> List[Permission]:
         lst: List[Permission] = []
 
         # Iterates through every permission. perm is the name of the
