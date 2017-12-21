@@ -19,6 +19,20 @@ class Commands:
         self.emojiCustomPattern: Pattern = re.compile(r"<:[a-zA-Z0-9_]+:([0-9]+)>$")
 
     @commands.command(pass_context = True)
+    async def channelcreated(self, ctx, channel: discord.Channel = None):
+        msg: discord.Message = ctx.message
+
+        if channel is None:
+            channel = msg.channel
+
+        embed: discord.Embed = discord.Embed()
+        embed.colour = discord.Colour(Utils.getRandomColour())
+        embed.title = "Channel Info"
+        embed.description = f"Channel created at `{channel.created_at}`."
+
+        await self.bot.send_message(destination = msg.channel, embed = embed)
+
+    @commands.command(pass_context = True)
     async def icon(self, ctx, user: discord.User = None):
         msg: discord.Message = ctx.message
 
