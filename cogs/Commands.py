@@ -19,7 +19,7 @@ class Commands:
         self.emojiCustomPattern: Pattern = re.compile(r"<:[a-zA-Z0-9_]+:([0-9]+)>$")
 
     @commands.command(pass_context = True)
-    async def channelcreated(self, ctx, channel: discord.Channel = None):
+    async def created(self, ctx, channel: discord.Channel = None):
         msg: discord.Message = ctx.message
 
         if channel is None:
