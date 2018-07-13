@@ -121,16 +121,53 @@ welcome.
 * `thumbnail` - A URL to the thumbnail to use in the embed.
 * `words` -
 
-### Running
-Run `bot.py` to run the bot.
+### Requirements
+#### Binaries
+* [Python 3.6](https://www.python.org/downloads/)
+    * discord.py or one of its dependencies may currently have issues with
+    Python 3.7.
+
+#### Packages
+> **Note** pipenv can install these automatically (apart from pipenv itself)
+from the provided Pipfiles.
+
+* [discord.py](https://github.com/Rapptz/discord.py) rewrite
+* [wordcloud](https://github.com/amueller/word_cloud)
+* [randomcolor](https://github.com/kevinwuhoo/randomcolor-py)
+* [emoji](https://github.com/carpedm20/emoji)
+* `OPTIONAL` [pipenv](https://docs.pipenv.org/)
+
+### Installation
+[pipenv](https://docs.pipenv.org/) can be used to simply the installation
+process. Once it is installed, `cd` into the root directory and install the
+dependencies from the pipfile with
 
 ```bash
-python bot.py
+pipenv install
 ```
 
-### Requirements
-* [Python 3.6](https://www.python.org/downloads/) or higher
-* [discord.py](https://github.com/Rapptz/discord.py) async
-* [world_cloud](https://github.com/amueller/word_cloud)
-* [randomcolor-py](https://github.com/kevinwuhoo/randomcolor-py)
-* [emoji](https://github.com/carpedm20/emoji)
+An error may occur while installing wordcloud on Windows. More specifically
+
+> Failed building wheel for wordcloud
+
+The error can be circumvented by downloading a pre-built wheel of wordcloud from
+[here](http://www.lfd.uci.edu/%7Egohlke/pythonlibs/#wordcloud). Download the
+version of the wheel appropriate for your Python version and OS. To finish the
+install, run
+
+```bash
+pipenv install /path/to/wordcloud-wheel-file.whl
+```
+
+### Running
+Run `bot.py` to run the bot. If using pipenv:
+
+```bash
+pipenv run python ./brotherchris/bot.py
+```
+
+otherwise
+
+```bash
+python ./brotherchris/bot.py
+```
