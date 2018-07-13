@@ -130,9 +130,9 @@ class WordPolice:
             embed.add_field(name = f"{length} Letters",
                             value = value)
 
-        await self.bot.send_message(destination = msg.channel, embed = embed)
+        await msg.channel.send(embed = embed)
         self.log.info(f"{msg.author} triggered the word police in "
-                      f"{msg.server.name} #{msg.channel.name}")
+                      f"{msg.guild.name} #{msg.channel.name}")
 
     async def on_message(self, msg: discord.Message):
         """
@@ -158,12 +158,12 @@ class WordPolice:
         WordPolice.sendMessage()
         """
         # Ignores direct messages.
-        if msg.server is None:
+        if msg.guild is None:
             return
 
         # Only processes messages which come from the servers specified in the
         # configuration.
-        if msg.server.id in self.config["idServers"]:
+        if msg.guild.id in self.config["idServers"]:
             matches: List[str] = re.findall(self.pattern, msg.content)
 
             # Iterates through every unique match in order of appearance.

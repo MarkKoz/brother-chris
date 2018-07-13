@@ -64,7 +64,7 @@ async def on_message(msg: discord.Message):
     None
     """
     # Ignores direct/private messages.
-    if msg.server is None:
+    if msg.guild is None:
         return
 
     # Only processes commands if called by users as specified in the config.

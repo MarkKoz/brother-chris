@@ -27,7 +27,7 @@ class Permissions:
     async def perms(self,
                     ctx,
                     user: discord.User = None,
-                    channel: discord.Channel = None):
+                    channel: discord.TextChannel = None):
         msg: discord.Message = ctx.message
 
         if user is None:
@@ -37,7 +37,7 @@ class Permissions:
             channel = msg.channel
 
         # Deletes the command message.
-        await self.bot.delete_message(msg)
+        await msg.delete()
 
         perms: List[Permission] = self.getList(msg.channel.permissions_for(msg.author))
 
@@ -63,9 +63,9 @@ class Permissions:
                         value = self.getString(perms, Category.VOICE, width),
                         inline = False)
 
-        await self.bot.send_message(destination = msg.channel, embed = embed)
+        await msg.channel.send(embed = embed)
         self.log.info(f"{msg.author} retrieved {user}'s permissions for "
-                      f"#{channel.name} in {msg.server.name} "
+                      f"#{channel.name} in {msg.guild.name} "
                       f"#{msg.channel.name}.")
 
     @staticmethod

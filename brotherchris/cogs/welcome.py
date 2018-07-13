@@ -39,7 +39,7 @@ class Welcome:
         discord.Client.send_message()
         """
         # Ignores direct messages.
-        if msg.server is None:
+        if msg.guild is None:
             return
 
         # Only processes messages which come from the servers specified in the
@@ -49,9 +49,8 @@ class Welcome:
         if msg.channel.id in self.config["channels"] and \
            msg.author.id == self.config["idDyno"] and \
            self.config["msgDyno"] in msg.content:
-            await self.bot.send_message(msg.channel,
-                                        f"Welcome {msg.mentions[0].mention}!")
-            self.log.info(f"Welcomed {msg.mentions[0]} in {msg.server.name} "
+            await msg.channel.send(f"Welcome {msg.mentions[0].mention}!")
+            self.log.info(f"Welcomed {msg.mentions[0]} in {msg.guild.name} "
                           f"#{msg.channel.name}")
 
 def setup(bot: commands.Bot):
