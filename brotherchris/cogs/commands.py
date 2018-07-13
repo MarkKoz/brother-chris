@@ -16,8 +16,8 @@ class Commands:
         self.bot: commands.Bot = bot
         self.log: logging.Logger = logging.getLogger("bot.cogs.Commands")
         self.log.info("cogs.Commands loaded successfully.")
-        self.emojiPattern: Pattern = self.getEmojiPattern()
-        self.emojiCustomPattern: Pattern = re.compile(r"<:[a-zA-Z0-9_]+:([0-9]+)>$")
+        self.emoji_pattern: Pattern = self.get_emoji_pattern()
+        self.emoji_custom_pattern: Pattern = re.compile(r"<:[a-zA-Z0-9_]+:([0-9]+)>$")
 
     @commands.command()
     async def created(self, ctx, channel: discord.abc.GuildChannel = None):
@@ -27,7 +27,7 @@ class Commands:
             channel = msg.channel
 
         embed: discord.Embed = discord.Embed()
-        embed.colour = discord.Colour(utils.getRandomColour())
+        embed.colour = discord.Colour(utils.get_random_colour())
         embed.title = "Channel Info"
         embed.description = f"Channel created at `{channel.created_at}`."
 
@@ -41,35 +41,35 @@ class Commands:
         await msg.delete()
 
         embed: discord.Embed = discord.Embed()
-        embed.colour = discord.Colour(utils.getRandomColour())
+        embed.colour = discord.Colour(utils.get_random_colour())
 
         if user is not None:
             embed.title = "User Avatar"
             embed.description = f"Avatar for {user.mention}."
             embed.set_image(url = user.avatar_url)
 
-            logMsg: str = f"{msg.author} requested {user}'s avatar."
+            log_msg: str = f"{msg.author} requested {user}'s avatar."
         else:
             embed.title = "Server Icon"
             embed.description = f"Server icon for {msg.guild.name}."
             embed.set_image(url = msg.guild.icon_url)
 
-            logMsg: str = f"{msg.author} requested {msg.guild.name}'s " \
-                          f"server icon."
+            log_msg: str = f"{msg.author} requested {msg.guild.name}'s " \
+                           f"server icon."
 
         await msg.channel.send(embed = embed)
-        self.log.info(logMsg)
+        self.log.info(log_msg)
 
-    @commands.command()
-    async def emojiurl(self, ctx, emoji: str):
+    @commands.command(name = "emojiurl")
+    async def emoji_url(self, ctx, emoji: str):
         msg: discord.Message = ctx.message
         await msg.delete()
 
-        match: Match = self.emojiCustomPattern.fullmatch(emoji)
+        match: Match = self.emoji_custom_pattern.fullmatch(emoji)
 
         if match:
             try:
-                emoji: discord.Emoji = self.getEmojiCustom(match.group(1))
+                emoji: discord.Emoji = self.get_custom_emoji(match.group(1))
                 await msg.channel.send(emoji.url)
             except discord.InvalidArgument:
                 self.log.error(f"Argument 'emoji' ({emoji}) is not a valid "
@@ -85,7 +85,7 @@ class Commands:
         embed: discord.Embed = discord.Embed()
         embed.title = "IDs"
         embed.description = f"IDs for {user.mention}."
-        embed.colour = discord.Colour(utils.getRandomColour())
+        embed.colour = discord.Colour(utils.get_random_colour())
         embed.add_field(name = "User:",
                         value = user.id,
                         inline = False)
@@ -113,44 +113,44 @@ class Commands:
             def check(message: discord.Message) -> bool:
                 return message.author == user
 
-        async def addReactions(isCustom: bool = False):
-            async for message in self.getMessages(msg.channel, limit, check):
+        async def add_reactions(isCustom: bool = False):
+            async for message in self.get_messages(msg.channel, limit, check):
                 await message.add_reaction(emoji)
 
             if isCustom:
-                # TODO: Add type annotations for emojiString.
-                emojiString = emoji
+                # TODO: Add type annotations for emoji_string.
+                emoji_string = emoji
             else:
-                emojiString = emoji.encode("unicode_escape").decode("utf-8")
+                emoji_string = emoji.encode("unicode_escape").decode("utf-8")
 
-            self.log.info(f"{msg.author} reacted with {emojiString} to "
+            self.log.info(f"{msg.author} reacted with {emoji_string} to "
                           f"{limit} messages in {msg.guild.name} "
                           f"#{msg.channel.name}.")
 
-        if self.emojiPattern.fullmatch(emoji):
-            await addReactions()
+        if self.emoji_pattern.fullmatch(emoji):
+            await add_reactions()
         else:
-            match: Match = self.emojiCustomPattern.fullmatch(emoji)
+            match: Match = self.emoji_custom_pattern.fullmatch(emoji)
 
             if match:
                 try:
-                    emoji: discord.Emoji = self.getEmojiCustom(match.group(1))
-                    await addReactions(True)
+                    emoji: discord.Emoji = self.get_custom_emoji(match.group(1))
+                    await add_reactions(True)
                 except discord.InvalidArgument:
                     self.log.error(f"Argument 'emoji' ({emoji}) is not a valid "
                                    "custom emoji.")
             else:
-                emojiString = emoji.encode("unicode_escape").decode("utf-8")
-                self.log.error(f"Argument 'emoji' ({emojiString}) is not a "
+                emoji_string = emoji.encode("unicode_escape").decode("utf-8")
+                self.log.error(f"Argument 'emoji' ({emoji_string}) is not a "
                                "valid Unicode emoji.")
 
-    @commands.command()
-    async def wc(self,
-                 ctx,
-                 user: discord.User = None,
-                 channel: discord.TextChannel= None,
-                 limit: int = 1000,
-                 colour: str = None):
+    @commands.command(name = "wc")
+    async def word_cloud(self,
+                         ctx,
+                         user: discord.User = None,
+                         channel: discord.TextChannel= None,
+                         limit: int = 1000,
+                         colour: str = None):
         msg: discord.Message = ctx.message
 
         if user is None:
@@ -163,14 +163,14 @@ class Commands:
         await msg.delete()
 
         # Generates and posts a word cloud.
-        imageFile: pathlib.Path = await self.getWordCloudImage(channel, user, limit, colour)
-        await msg.channel.send(file = discord.File(imageFile))
-        pathlib.Path.unlink(imageFile)
+        image_path: pathlib.Path = await self.get_word_cloud_image(channel, user, limit, colour)
+        await msg.channel.send(file = discord.File(image_path))
+        pathlib.Path.unlink(image_path)
 
         # Retrieves the word cloud attachment's URL.
         # def check(message: discord.Message) -> bool:
         #     if message.attachments:
-        #         return dict(message.attachments[0])["filename"] == os.path.basename(imageFile)
+        #         return dict(message.attachments[0])["filename"] == os.path.basename(image_path)
         #
         #     return False
         #
@@ -184,7 +184,7 @@ class Commands:
         embed.title = "Word Cloud"
         embed.description = f"Word cloud for {user.mention} in " \
                             f"{channel.mention}."
-        embed.colour = discord.Colour(utils.getRandomColour())
+        embed.colour = discord.Colour(utils.get_random_colour())
         # embed.set_image(url = imageURL)
 
         await msg.channel.send(embed = embed)
@@ -193,7 +193,7 @@ class Commands:
                       f"{channel.guild.name} #{channel.name}.")
 
     @staticmethod
-    async def getContents(messages: AsyncGenerator[discord.Message, None]) -> str:
+    async def get_contents(messages: AsyncGenerator[discord.Message, None]) -> str:
         contents: str = ""
 
         async for message in messages:
@@ -202,7 +202,7 @@ class Commands:
         return contents
 
     @staticmethod
-    def getEmojiPattern() -> Pattern:
+    def get_emoji_pattern() -> Pattern:
         emojis: List[str] = sorted(unicode_codes.EMOJI_UNICODE.values(),
                                    key = len,
                                    reverse = True)
@@ -210,23 +210,23 @@ class Commands:
 
         return re.compile(pattern)
 
-    async def getMessages(self,
-                          channel: discord.TextChannel,
-                          limit: int,
-                          check: Callable[[discord.Message], bool] = None
-                          ) -> AsyncGenerator[discord.Message, None]:
+    async def get_messages(self,
+                           channel: discord.TextChannel,
+                           limit: int,
+                           check: Callable[[discord.Message], bool] = None
+                           ) -> AsyncGenerator[discord.Message, None]:
         counter: int = 0
-        limitLogs: int = 1000
+        history_limit: int = 1000
 
-        if limit > limitLogs:
-            limitLogs = limit
+        if limit > history_limit:
+            history_limit = limit
 
-        async for message in channel.history(limit = limitLogs):
+        async for message in channel.history(limit = history_limit):
             if (check is None or check(message)) and counter != limit:
                 counter += 1
                 yield message
 
-    def getEmojiCustom(self, emojiID: str) -> discord.Emoji:
+    def get_custom_emoji(self, emojiID: str) -> discord.Emoji:
         for emoji in self.bot.emojis:
             if emoji.id == emojiID:
                 return emoji
@@ -234,22 +234,22 @@ class Commands:
         raise discord.InvalidArgument(f"Argument 'emojiID' ({emojiID}) does not"
                                       " reference a valid custom emoji.")
 
-    async def getWordCloudImage(self,
-                                channel: discord.TextChannel,
-                                user: discord.User,
-                                limit: int,
-                                colour: str
-                                ) -> pathlib.Path:
+    async def get_word_cloud_image(self,
+                                   channel: discord.TextChannel,
+                                   user: discord.User,
+                                   limit: int,
+                                   colour: str
+                                   ) -> pathlib.Path:
         def check(message: discord.Message) -> bool:
             return message.author == user
 
         # Generates the word cloud.
-        text: str = await self.getContents(self.getMessages(channel, limit, check))
-        wordcloud: WordCloud = WordCloud(width = 1280,
-                                         height = 720,
-                                         background_color = colour,
-                                         mode = "RGBA"
-                                         ).generate(text)
+        text: str = await self.get_contents(self.get_messages(channel, limit, check))
+        word_cloud: WordCloud = WordCloud(width = 1280,
+                                          height = 720,
+                                          background_color = colour,
+                                          mode = "RGBA"
+                                          ).generate(text)
 
         # TODO: Put path-related code into a separate function.
         # Creates the path to the file to which the image will be saved.
@@ -261,7 +261,7 @@ class Commands:
         path.mkdir(parents = True, exist_ok = True)
         path = path.joinpath(f"wc_{user.id}.png")
 
-        wordcloud.to_file(str(path))
+        word_cloud.to_file(str(path))
 
         return path
 

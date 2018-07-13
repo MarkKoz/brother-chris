@@ -22,7 +22,7 @@ class Permissions:
         self.bot: commands.Bot = bot
         self.log: logging.Logger = logging.getLogger("bot.cogs.Permissions")
         self.log.info("cogs.Permissions loaded successfully.")
-        self.config: Dict = utils.loadConfig("Permissions")
+        self.config: Dict = utils.load_config("Permissions")
 
     @commands.command()
     async def perms(self,
@@ -40,28 +40,28 @@ class Permissions:
         # Deletes the command message.
         await msg.delete()
 
-        perms: List[Permission] = self.getList(msg.channel.permissions_for(msg.author))
+        perms: List[Permission] = self.get_list(msg.channel.permissions_for(msg.author))
 
         if self.config["justify"]:
-            width: int = self.getWidthMax(perms, self.config["padding"])
+            width: int = self.get_max_width(perms, self.config["padding"])
         else:
             width: int = 0
 
         embed: discord.Embed = discord.Embed()
-        embed.colour = discord.Colour(utils.getRandomColour())
+        embed.colour = discord.Colour(utils.get_random_colour())
         embed.title = "Member Permissions"
         embed.description = f"Permissions for {user.mention} in {channel.mention}."
 
         embed.add_field(name = "General Permissions",
-                        value = self.getString(perms, Category.GENERAL, width),
+                        value = self.get_string(perms, Category.GENERAL, width),
                         inline = False)
 
         embed.add_field(name = "Text Permissions",
-                        value = self.getString(perms, Category.TEXT, width),
+                        value = self.get_string(perms, Category.TEXT, width),
                         inline = False)
 
         embed.add_field(name = "Voice Permissions",
-                        value = self.getString(perms, Category.VOICE, width),
+                        value = self.get_string(perms, Category.VOICE, width),
                         inline = False)
 
         await msg.channel.send(embed = embed)
@@ -70,7 +70,7 @@ class Permissions:
                       f"#{msg.channel.name}.")
 
     @staticmethod
-    def getList(perms: discord.Permissions) -> List[Permission]:
+    def get_list(perms: discord.Permissions) -> List[Permission]:
         lst: List[Permission] = []
 
         # Iterates through every permission. perm is the name of the
@@ -97,14 +97,14 @@ class Permissions:
         return lst
 
     @staticmethod
-    def getString(perms: List[Permission],
-                  category: Category,
-                  width: int) -> str:
+    def get_string(perms: List[Permission],
+                   category: Category,
+                   width: int) -> str:
         return "".join(f"{p.name.ljust(width)} `{p.value}`\n"
                        for p in perms if p.category == category)
 
     @staticmethod
-    def getWidthMax(perms: List[Permission], padding: int) -> int:
+    def get_max_width(perms: List[Permission], padding: int) -> int:
         return max(len(p.name) for p in perms) + padding
 
 def setup(bot: commands.Bot):

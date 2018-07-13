@@ -17,11 +17,11 @@ class WordPolice:
         self.bot: commands.Bot = bot
         self.log: logging.Logger = logging.getLogger("bot.cogs.WordPolice")
         self.log.info("cogs.WordPolice loaded successfully.")
-        self.config: Dict = utils.loadConfig("WordPolice")
-        self.pattern = self.getPattern(self.config["words"])
+        self.config: Dict = utils.load_config("WordPolice")
+        self.pattern = self.get_pattern(self.config["words"])
 
     @staticmethod
-    def getPattern(lst: List[str]) -> Pattern:
+    def get_pattern(lst: List[str]) -> Pattern:
         """
         Creates a regular expression :class:`Pattern` that will match any
         :class:`string<str>` from :any:`lst`.
@@ -51,7 +51,7 @@ class WordPolice:
         return re.compile(pattern, re.IGNORECASE)
 
     @staticmethod
-    def splitByLength(lst: List[str]) -> Dict[int, List[str]]:
+    def split_by_length(lst: List[str]) -> Dict[int, List[str]]:
         """
         Splits :any:`lst` into separate :class:`lists<list>` which are grouped
         based on the length of the :class:`strings<str>`.
@@ -89,7 +89,7 @@ class WordPolice:
 
         return out
 
-    async def sendMessage(self, msg: discord.Message, word: str):
+    async def send_message(self, msg: discord.Message, word: str):
         """
         Creates and sends an :class:`embed<discord.Embed>` which suggests
         possible alternatives for the word which triggered the Word Police.
@@ -108,17 +108,17 @@ class WordPolice:
         -------
         discord.Client.send_message()
         discord.Embed()
-        WordPolice.splitByLength()
+        WordPolice.split_by_length()
         """
         embed: discord.Embed = discord.Embed()
         embed.title = "Word Police"
         embed.description = f"Stop right there, {msg.author.mention}!\n" \
                             "Perhaps you meant one of the following words " \
                             "instead?"
-        embed.colour = utils.getRandomColour()
+        embed.colour = utils.get_random_colour()
         embed.set_thumbnail(url = self.config["thumbnail"])
 
-        suggestions: Dict[int, List[str]] = self.splitByLength(self.config["words"][word.lower()])
+        suggestions: Dict[int, List[str]] = self.split_by_length(self.config["words"][word.lower()])
 
         length: int
         lst: List[str]
@@ -141,7 +141,7 @@ class WordPolice:
         server.
 
         Determines if the message sent contains words in the list of words in
-        the configuration for WordPolice. If it does, :func:`sendMessage` is
+        the configuration for WordPolice. If it does, :func:`send_message` is
         called for every unique match.
 
         Parameters
@@ -155,8 +155,8 @@ class WordPolice:
 
         See Also
         --------
-        WordPolice.getPattern()
-        WordPolice.sendMessage()
+        WordPolice.get_pattern()
+        WordPolice.send_message()
         """
         # Ignores direct messages.
         if msg.guild is None:
@@ -164,12 +164,12 @@ class WordPolice:
 
         # Only processes messages which come from the servers specified in the
         # configuration.
-        if msg.guild.id in self.config["idServers"]:
+        if msg.guild.id in self.config["server_ids"]:
             matches: List[str] = re.findall(self.pattern, msg.content)
 
             # Iterates through every unique match in order of appearance.
             for match in dict.fromkeys(matches):
-                await self.sendMessage(msg, match)
+                await self.send_message(msg, match)
 
 
 def setup(bot: commands.Bot):

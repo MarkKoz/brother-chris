@@ -8,7 +8,7 @@ from cogs import utils
 import logger
 
 # Loads the configuration file.
-config: dict = utils.loadConfig("Bot")
+config: dict = utils.load_config("Bot")
 name: str = config["name"]
 
 bot: commands.Bot = commands.Bot(command_prefix = config["prefixes"],
@@ -67,7 +67,7 @@ async def on_message(msg: discord.Message):
         return
 
     # Only processes commands if called by users as specified in the config.
-    if msg.author.id in config["idUsers"]:
+    if msg.author.id in config["user_ids"]:
         await bot.process_commands(msg)
 
 if __name__ == "__main__":

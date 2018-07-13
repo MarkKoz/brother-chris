@@ -3,7 +3,7 @@ import json
 
 from randomcolor import RandomColor
 
-def loadConfig(prop: str) -> Dict:
+def load_config(prop: str) -> Dict:
     """
     Retrieves the configuration for the given property as a
     :class:`dictionary<dict>` from Configuration.json.
@@ -21,7 +21,7 @@ def loadConfig(prop: str) -> Dict:
     with open("Configuration.json") as file:
         return json.load(file)[prop]
 
-def getRandomColour() -> int:
+def get_random_colour() -> int:
     """
     Generates a random colour as a hexadecimal integer.
 

@@ -15,7 +15,7 @@ class Welcome:
         self.bot: commands.Bot = bot
         self.log: logging.Logger = logging.getLogger("bot.cogs.Welcome")
         self.log.info("cogs.Welcome loaded successfully.")
-        self.config: Dict = utils.loadConfig("Welcome")
+        self.config: Dict = utils.load_config("Welcome")
 
     async def on_message(self, msg: discord.Message):
         """
@@ -48,8 +48,8 @@ class Welcome:
         # Checks if the author is the Dyno bot and if the message contains
         # the welcome string specified in the configuration.
         if msg.channel.id in self.config["channels"] and \
-           msg.author.id == self.config["idDyno"] and \
-           self.config["msgDyno"] in msg.content:
+           msg.author.id == self.config["dyno_id"] and \
+           self.config["dyno_msg"] in msg.content:
             await msg.channel.send(f"Welcome {msg.mentions[0].mention}!")
             self.log.info(f"Welcomed {msg.mentions[0]} in {msg.guild.name} "
                           f"#{msg.channel.name}")

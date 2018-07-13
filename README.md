@@ -41,8 +41,7 @@ the bare-minimum required for the bot to run properly.
 {
     "Bot": {
         "token": "",
-        "isSelfBot": true,
-        "idUsers": [
+        "user_ids": [
             123456789012345678
         ],
         "extensions": [
@@ -58,7 +57,7 @@ the bare-minimum required for the bot to run properly.
 ```
 
 * `token` - The bot's token.
-* `idUsers` - A list of user IDs which identify who can use the bot. Any other
+* `user_ids` - A list of user IDs which identify who can use the bot. Any other
 user's messages with commands are completely ignored.
 * `extensions` - A list of extensions for the bot to load.
 * `prefixes` - A list of prefixes to use for commands.
@@ -83,23 +82,23 @@ columns.
 #### Welcome
 ```json
 "Welcome": {
-    "idDyno": 155149108183695360,
+    "dyno_id": 155149108183695360,
     "channels": [
         123456789012345678
     ],
-    "msgDyno": "joined the server! Give them a welcome!"
+    "dyno_msg": "joined the server! Give them a welcome!"
 }
 ```
 
-* `idDyno` - The ID of the bot that sends the messages to listen for.
+* `dyno_id` - The ID of the bot that sends the messages to listen for.
 * `channels` - A list of channel IDs in which to listen for the bot's messages.
-* `msgDyno` - The search string used to determine if the bot's message is a
+* `dyno_msg` - The search string used to determine if the bot's message is a
 welcome.
 
 #### Word Police
 ```json
 "WordPolice": {
-    "idServers": [
+    "server_ids": [
         123456789012345678
     ],
     "thumbnail": "",
@@ -116,7 +115,7 @@ welcome.
 }
 ```
 
-* `idServers` - A list of server IDs in which to listen for messages.
+* `server_ids` - A list of server IDs in which to listen for messages.
 * `thumbnail` - A URL to the thumbnail to use in the embed.
 * `words` -
 
