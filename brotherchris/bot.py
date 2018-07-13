@@ -84,13 +84,13 @@ async def global_user_check(ctx: commands.Context) -> bool:
 
 if __name__ == "__main__":
     # Creates loggers.
-    strFormat: str = "%(asctime)s - [%(levelname)s] %(name)s: %(message)s"
+    format_str: str = "%(asctime)s - [%(levelname)s] %(name)s: %(message)s"
     pattern: Pattern = re.compile(r"Unhandled event", re.IGNORECASE)
     handler: logger.StreamFiltered = logger.StreamFiltered(pattern)
 
-    loggerBot: logger.LoggerProxy = logger.LoggerProxy("bot", strFormat)
-    loggerDiscord: logger.LoggerProxy = logger.LoggerProxy("discord", strFormat, handler)
-    log = loggerBot.log
+    bot_logger: logger.LoggerProxy = logger.LoggerProxy("bot", format_str)
+    discord_logger: logger.LoggerProxy = logger.LoggerProxy("discord", format_str, handler)
+    log = bot_logger.log
 
     # Loads extensions.
     for extension in config["extensions"]:
@@ -103,5 +103,5 @@ if __name__ == "__main__":
     bot.run(config["token"]) # Starts the bot.
 
     # Closes and removes logging handlers.
-    loggerBot.close()
-    loggerDiscord.close()
+    bot_logger.close()
+    discord_logger.close()
