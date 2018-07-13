@@ -10,11 +10,9 @@ import logger
 # Loads the configuration file.
 config: dict = utils.loadConfig("Bot")
 name: str = config["name"]
-isSelfBot: bool = config["isSelfBot"]
 
 bot: commands.Bot = commands.Bot(command_prefix = config["prefixes"],
                                  description = name,
-                                 self_bot = isSelfBot,
                                  pm_help = None,
                                  help_attrs = dict(hidden = True))
 
@@ -90,7 +88,7 @@ if __name__ == "__main__":
             log.error(f"{extension} failed to load.\n"
                       f"{type(e).__name__}: {e}")
 
-    bot.run(config["token"], bot = not isSelfBot) # Starts the bot.
+    bot.run(config["token"]) # Starts the bot.
 
     # Closes and removes logging handlers.
     loggerBot.close()

@@ -1,7 +1,7 @@
 # Brother Chris
 ### Description
-My personal Discord self-bot. Made for educational purposes: to learn Discord
-bots and Python.
+My personal Discord bot Made for educational purposes: to learn Discord bots and
+Python.
 
 ### Commands
 Commands can only be executed by the users specified in the configuration.<br>
@@ -58,7 +58,6 @@ the bare-minimum required for the bot to run properly.
 ```
 
 * `token` - The bot's token.
-* `isSelfBot`- `true` if `token` is for a self bot.
 * `idUsers` - A list of user IDs which identify who can use the bot. Any other
 user's messages with commands are completely ignored.
 * `extensions` - A list of extensions for the bot to load.
