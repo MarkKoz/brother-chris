@@ -24,7 +24,7 @@ class Permissions:
         self.log.info("cogs.Permissions loaded successfully.")
         self.config: Dict = utils.loadConfig("Permissions")
 
-    @commands.command(pass_context = True)
+    @commands.command()
     async def perms(self,
                     ctx,
                     user: discord.User = None,

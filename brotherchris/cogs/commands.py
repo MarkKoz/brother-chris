@@ -19,7 +19,7 @@ class Commands:
         self.emojiPattern: Pattern = self.getEmojiPattern()
         self.emojiCustomPattern: Pattern = re.compile(r"<:[a-zA-Z0-9_]+:([0-9]+)>$")
 
-    @commands.command(pass_context = True)
+    @commands.command()
     async def created(self, ctx, channel: discord.abc.GuildChannel = None):
         msg: discord.Message = ctx.message
 
@@ -33,7 +33,7 @@ class Commands:
 
         await msg.channel.send(embed = embed)
 
-    @commands.command(pass_context = True)
+    @commands.command()
     async def icon(self, ctx, user: discord.User = None):
         msg: discord.Message = ctx.message
 
@@ -60,7 +60,7 @@ class Commands:
         await msg.channel.send(embed = embed)
         self.log.info(logMsg)
 
-    @commands.command(pass_context = True)
+    @commands.command()
     async def emojiurl(self, ctx, emoji: str):
         msg: discord.Message = ctx.message
         await msg.delete()
@@ -75,7 +75,7 @@ class Commands:
                 self.log.error(f"Argument 'emoji' ({emoji}) is not a valid "
                                "custom emoji.")
 
-    @commands.command(pass_context = True)
+    @commands.command()
     async def id(self, ctx, *, user: discord.User = None):
         msg: discord.Message = ctx.message
 
@@ -102,7 +102,7 @@ class Commands:
         self.log.info(f"{msg.author} retrieved IDs in {msg.guild.name} "
                       f"#{msg.channel.name}.")
 
-    @commands.command(pass_context = True)
+    @commands.command()
     async def react(self, ctx, emoji: str, limit: int, user: discord.User = None):
         msg: discord.Message = ctx.message
         await msg.delete()
@@ -144,7 +144,7 @@ class Commands:
                 self.log.error(f"Argument 'emoji' ({emojiString}) is not a "
                                "valid Unicode emoji.")
 
-    @commands.command(pass_context = True)
+    @commands.command()
     async def wc(self,
                  ctx,
                  user: discord.User = None,
