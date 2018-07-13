@@ -62,9 +62,25 @@ async def on_message(msg: discord.Message):
     -------
     None
     """
-    # Only processes commands if called by users as specified in the config.
-    if msg.author.id in config["user_ids"]:
+    if not msg.author.bot:
         await bot.process_commands(msg)
+
+@bot.check
+async def global_user_check(ctx: commands.Context) -> bool:
+    """
+    Only allows a command if invoked by a user specified in the config.
+
+    Parameters
+    ----------
+    ctx: commands.Context
+        The context in which the command was invoked.
+
+    Returns
+    -------
+    bool
+        True if the invoking user is permitted; False otherwise.
+    """
+    return ctx.message.author.id in config["user_ids"]
 
 if __name__ == "__main__":
     # Creates loggers.

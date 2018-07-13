@@ -159,7 +159,7 @@ class WordPolice:
         WordPolice.send_message()
         """
         # Ignores direct messages.
-        if msg.guild is None:
+        if msg.author.bot or msg.guild is None:
             return
 
         # Only processes messages which come from the servers specified in the
