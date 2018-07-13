@@ -12,10 +12,11 @@ import logger
 config: dict = utils.load_config("Bot")
 name: str = config["name"]
 
-bot: commands.Bot = commands.Bot(command_prefix = config["prefixes"],
-                                 description = name,
-                                 pm_help = None,
-                                 help_attrs = dict(hidden = True))
+bot: commands.Bot = commands.Bot(
+    command_prefix = config["prefixes"],
+    description = name,
+    pm_help = None,
+    help_attrs = dict(hidden = True))
 
 @bot.event
 async def on_ready():
@@ -144,7 +145,8 @@ if __name__ == "__main__":
     handler: logger.StreamFiltered = logger.StreamFiltered(pattern)
 
     bot_logger: logger.LoggerProxy = logger.LoggerProxy("bot", format_str)
-    discord_logger: logger.LoggerProxy = logger.LoggerProxy("discord", format_str, handler)
+    discord_logger: logger.LoggerProxy = logger.LoggerProxy(
+        "discord", format_str, handler)
     log = bot_logger.log
 
     # Loads extensions.

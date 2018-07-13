@@ -26,10 +26,11 @@ class Permissions:
 
     @commands.command()
     @commands.guild_only()
-    async def perms(self,
-                    ctx,
-                    user: discord.User = None,
-                    channel: discord.TextChannel = None):
+    async def perms(
+            self,
+            ctx,
+            user: discord.User = None,
+            channel: discord.TextChannel = None):
         msg: discord.Message = ctx.message
 
         if user is None:
@@ -41,7 +42,8 @@ class Permissions:
         # Deletes the command message.
         await msg.delete()
 
-        perms: List[Permission] = self.get_list(msg.channel.permissions_for(msg.author))
+        perms: List[Permission] = self.get_list(
+            msg.channel.permissions_for(msg.author))
 
         if self.config["justify"]:
             width: int = self.get_max_width(perms, self.config["padding"])
@@ -51,24 +53,26 @@ class Permissions:
         embed: discord.Embed = discord.Embed()
         embed.colour = discord.Colour(utils.get_random_colour())
         embed.title = "Member Permissions"
-        embed.description = f"Permissions for {user.mention} in {channel.mention}."
+        embed.description = \
+            f"Permissions for {user.mention} in {channel.mention}."
 
-        embed.add_field(name = "General Permissions",
-                        value = self.get_string(perms, Category.GENERAL, width),
-                        inline = False)
+        embed.add_field(
+            name="General Permissions",
+            value=self.get_string(perms, Category.GENERAL, width),
+            inline=False)
+        embed.add_field(
+            name="Text Permissions",
+            value=self.get_string(perms, Category.TEXT, width),
+            inline=False)
+        embed.add_field(
+            name="Voice Permissions",
+            value=self.get_string(perms, Category.VOICE, width),
+            inline=False)
 
-        embed.add_field(name = "Text Permissions",
-                        value = self.get_string(perms, Category.TEXT, width),
-                        inline = False)
-
-        embed.add_field(name = "Voice Permissions",
-                        value = self.get_string(perms, Category.VOICE, width),
-                        inline = False)
-
-        await msg.channel.send(embed = embed)
-        self.log.info(f"{msg.author} retrieved {user}'s permissions for "
-                      f"#{channel.name} in {msg.guild.name} "
-                      f"#{msg.channel.name}.")
+        await msg.channel.send(embed=embed)
+        self.log.info(
+            f"{msg.author} retrieved {user}'s permissions for #{channel.name} "
+            f"in {msg.guild.name} #{msg.channel.name}.")
 
     @staticmethod
     def get_list(perms: discord.Permissions) -> List[Permission]:
@@ -101,8 +105,9 @@ class Permissions:
     def get_string(perms: List[Permission],
                    category: Category,
                    width: int) -> str:
-        return "".join(f"{p.name.ljust(width)} `{p.value}`\n"
-                       for p in perms if p.category == category)
+        return "".join(
+            f"{p.name.ljust(width)} `{p.value}`\n"
+            for p in perms if p.category == category)
 
     @staticmethod
     def get_max_width(perms: List[Permission], padding: int) -> int:

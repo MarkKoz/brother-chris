@@ -112,13 +112,14 @@ class WordPolice:
         """
         embed: discord.Embed = discord.Embed()
         embed.title = "Word Police"
-        embed.description = f"Stop right there, {msg.author.mention}!\n" \
-                            "Perhaps you meant one of the following words " \
-                            "instead?"
+        embed.description = \
+            f"Stop right there, {msg.author.mention}!\n" \
+            f"Perhaps you meant one of the following words instead?"
         embed.colour = utils.get_random_colour()
-        embed.set_thumbnail(url = self.config["thumbnail"])
+        embed.set_thumbnail(url=self.config["thumbnail"])
 
-        suggestions: Dict[int, List[str]] = self.split_by_length(self.config["words"][word.lower()])
+        suggestions: Dict[int, List[str]] = self.split_by_length(
+            self.config["words"][word.lower()])
 
         length: int
         lst: List[str]
@@ -128,12 +129,14 @@ class WordPolice:
             for suggestion in lst:
                 value += "\n" + suggestion
 
-            embed.add_field(name = f"{length} Letters",
-                            value = value)
+            embed.add_field(
+                name=f"{length} Letters",
+                value=value)
 
-        await msg.channel.send(embed = embed)
-        self.log.info(f"{msg.author} triggered the word police in "
-                      f"{msg.guild.name} #{msg.channel.name}")
+        await msg.channel.send(embed=embed)
+        self.log.info(
+            f"{msg.author} triggered the word police in {msg.guild.name} "
+            f"#{msg.channel.name}")
 
     async def on_message(self, msg: discord.Message):
         """

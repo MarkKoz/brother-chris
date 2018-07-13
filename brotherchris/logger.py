@@ -7,10 +7,11 @@ class LoggerProxy:
     A proxy class for :class:`Logger<logging.Logger>`. The logging levels are
     set to :attr:`INFO<logging.INFO>`.
     """
-    def __init__(self,
-                 name: str,
-                 strFormat: str,
-                 handler: logging.Handler = logging.StreamHandler()):
+    def __init__(
+            self,
+            name: str,
+            strFormat: str,
+            handler: logging.Handler = logging.StreamHandler()):
         """
         Parameters
         ----------
