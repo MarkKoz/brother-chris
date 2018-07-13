@@ -43,7 +43,7 @@ the bare-minimum required for the bot to run properly.
         "token": "",
         "isSelfBot": true,
         "idUsers": [
-            ""
+            123456789012345678
         ],
         "extensions": [
             "cogs.Commands"
@@ -84,9 +84,9 @@ columns.
 #### Welcome
 ```json
 "Welcome": {
-    "idDyno": "155149108183695360",
+    "idDyno": 155149108183695360,
     "channels": [
-        ""
+        123456789012345678
     ],
     "msgDyno": "joined the server! Give them a welcome!"
 }
@@ -101,7 +101,7 @@ welcome.
 ```json
 "WordPolice": {
     "idServers": [
-        ""
+        123456789012345678
     ],
     "thumbnail": "",
     "words": {
