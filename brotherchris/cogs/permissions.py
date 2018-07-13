@@ -4,7 +4,7 @@ from typing import Dict, List, NamedTuple
 import discord
 import logging
 
-import cogs.Utils as Utils
+from cogs import utils
 
 class Category(Enum):
     GENERAL: int = discord.Permissions().general().value
@@ -21,7 +21,7 @@ class Permissions:
         self.bot: commands.Bot = bot
         self.log: logging.Logger = logging.getLogger("bot.cogs.Permissions")
         self.log.info("cogs.Permissions loaded successfully.")
-        self.config: Dict = Utils.loadConfig("Permissions")
+        self.config: Dict = utils.loadConfig("Permissions")
 
     @commands.command(pass_context = True)
     async def perms(self,
@@ -47,7 +47,7 @@ class Permissions:
             width: int = 0
 
         embed: discord.Embed = discord.Embed()
-        embed.colour = discord.Colour(Utils.getRandomColour())
+        embed.colour = discord.Colour(utils.getRandomColour())
         embed.title = "Member Permissions"
         embed.description = f"Permissions for {user.mention} in {channel.mention}."
 

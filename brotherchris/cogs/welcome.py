@@ -3,7 +3,7 @@ from typing import Dict
 import discord
 import logging
 
-import cogs.Utils as Utils
+from cogs import utils
 
 class Welcome:
     """
@@ -14,7 +14,7 @@ class Welcome:
         self.bot: commands.Bot = bot
         self.log: logging.Logger = logging.getLogger("bot.cogs.Welcome")
         self.log.info("cogs.Welcome loaded successfully.")
-        self.config: Dict = Utils.loadConfig("Welcome")
+        self.config: Dict = utils.loadConfig("Welcome")
 
     async def on_message(self, msg: discord.Message):
         """

@@ -3,11 +3,11 @@ from typing import Pattern
 import discord
 import re
 
-import Logging
-import cogs.Utils as Utils
+from cogs import utils
+import logger
 
 # Loads the configuration file.
-config: dict = Utils.loadConfig("Bot")
+config: dict = utils.loadConfig("Bot")
 name: str = config["name"]
 isSelfBot: bool = config["isSelfBot"]
 
@@ -75,10 +75,10 @@ if __name__ == "__main__":
     # Creates loggers.
     strFormat: str = "%(asctime)s - [%(levelname)s] %(name)s: %(message)s"
     pattern: Pattern = re.compile(r"Unhandled event", re.IGNORECASE)
-    handler: Logging.StreamFiltered = Logging.StreamFiltered(pattern)
+    handler: logger.StreamFiltered = logger.StreamFiltered(pattern)
 
-    loggerBot: Logging.LoggerProxy = Logging.LoggerProxy("bot", strFormat)
-    loggerDiscord: Logging.LoggerProxy = Logging.LoggerProxy("discord", strFormat, handler)
+    loggerBot: logger.LoggerProxy = logger.LoggerProxy("bot", strFormat)
+    loggerDiscord: logger.LoggerProxy = logger.LoggerProxy("discord", strFormat, handler)
     log = loggerBot.log
 
     # Loads extensions.

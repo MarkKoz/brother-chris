@@ -4,7 +4,7 @@ import discord
 import logging
 import re
 
-import cogs.Utils as Utils
+from cogs import utils
 
 class WordPolice:
     """
@@ -16,7 +16,7 @@ class WordPolice:
         self.bot: commands.Bot = bot
         self.log: logging.Logger = logging.getLogger("bot.cogs.WordPolice")
         self.log.info("cogs.WordPolice loaded successfully.")
-        self.config: Dict = Utils.loadConfig("WordPolice")
+        self.config: Dict = utils.loadConfig("WordPolice")
         self.pattern = self.getPattern(self.config["words"])
 
     @staticmethod
@@ -114,7 +114,7 @@ class WordPolice:
         embed.description = f"Stop right there, {msg.author.mention}!\n" \
                             "Perhaps you meant one of the following words " \
                             "instead?"
-        embed.colour = Utils.getRandomColour()
+        embed.colour = utils.getRandomColour()
         embed.set_thumbnail(url = self.config["thumbnail"])
 
         suggestions: Dict[int, List[str]] = self.splitByLength(self.config["words"][word.lower()])

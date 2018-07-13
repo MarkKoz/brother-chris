@@ -8,7 +8,7 @@ import pathlib
 import re
 import sys
 
-import cogs.Utils as Utils
+from cogs import utils
 
 class Commands:
     def __init__(self, bot: commands.Bot):
@@ -26,7 +26,7 @@ class Commands:
             channel = msg.channel
 
         embed: discord.Embed = discord.Embed()
-        embed.colour = discord.Colour(Utils.getRandomColour())
+        embed.colour = discord.Colour(utils.getRandomColour())
         embed.title = "Channel Info"
         embed.description = f"Channel created at `{channel.created_at}`."
 
@@ -40,7 +40,7 @@ class Commands:
         await self.bot.delete_message(msg)
 
         embed: discord.Embed = discord.Embed()
-        embed.colour = discord.Colour(Utils.getRandomColour())
+        embed.colour = discord.Colour(utils.getRandomColour())
 
         if user is not None:
             embed.title = "User Avatar"
@@ -84,7 +84,7 @@ class Commands:
         embed: discord.Embed = discord.Embed()
         embed.title = "IDs"
         embed.description = f"IDs for {user.mention}."
-        embed.colour = discord.Colour(Utils.getRandomColour())
+        embed.colour = discord.Colour(utils.getRandomColour())
         embed.add_field(name = "User:",
                         value = user.id,
                         inline = False)
@@ -183,7 +183,7 @@ class Commands:
         embed.title = "Word Cloud"
         embed.description = f"Word cloud for {user.mention} in " \
                             f"{channel.mention}."
-        embed.colour = discord.Colour(Utils.getRandomColour())
+        embed.colour = discord.Colour(utils.getRandomColour())
         # embed.set_image(url = imageURL)
 
         await self.bot.send_message(destination = msg.channel, embed = embed)

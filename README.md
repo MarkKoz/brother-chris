@@ -33,7 +33,7 @@ as the background based on a quantity (`limit`) of `user`'s messages from
     for more information.
 
 ### Configuration
-A file named `Configuration.json` and in the same directory as `Bot.py` is used
+A file named `Configuration.json` and in the same directory as `bot.py` is used
 for configuration of the bot. Below is the base configuration for the bot; it is
 the bare-minimum required for the bot to run properly.
 
@@ -122,10 +122,10 @@ welcome.
 * `words` -
 
 ### Running
-Run `Bot.py` to run the bot.
+Run `bot.py` to run the bot.
 
 ```bash
-python Bot.py
+python bot.py
 ```
 
 ### Requirements
