@@ -223,8 +223,8 @@ class Commands:
 
         return re.compile(pattern)
 
+    @staticmethod
     async def get_messages(
-            self,
             channel: discord.TextChannel,
             limit: int,
             check: Callable[[discord.Message], bool] = None
