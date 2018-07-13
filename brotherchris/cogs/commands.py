@@ -20,6 +20,7 @@ class Commands:
         self.emoji_custom_pattern: Pattern = re.compile(r"<:[a-zA-Z0-9_]+:([0-9]+)>$")
 
     @commands.command()
+    @commands.guild_only()
     async def created(self, ctx, channel: discord.abc.GuildChannel = None):
         msg: discord.Message = ctx.message
 
@@ -34,6 +35,7 @@ class Commands:
         await msg.channel.send(embed = embed)
 
     @commands.command()
+    @commands.guild_only()
     async def icon(self, ctx, user: discord.User = None):
         msg: discord.Message = ctx.message
 
@@ -76,6 +78,7 @@ class Commands:
                                "custom emoji.")
 
     @commands.command()
+    @commands.guild_only()
     async def id(self, ctx, *, user: discord.User = None):
         msg: discord.Message = ctx.message
 
@@ -103,6 +106,7 @@ class Commands:
                       f"#{msg.channel.name}.")
 
     @commands.command()
+    @commands.guild_only()
     async def react(self, ctx, emoji: str, limit: int, user: discord.User = None):
         msg: discord.Message = ctx.message
         await msg.delete()
@@ -145,6 +149,7 @@ class Commands:
                                "valid Unicode emoji.")
 
     @commands.command(name = "wc")
+    @commands.guild_only()
     async def word_cloud(self,
                          ctx,
                          user: discord.User = None,

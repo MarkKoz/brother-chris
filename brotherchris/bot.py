@@ -62,10 +62,6 @@ async def on_message(msg: discord.Message):
     -------
     None
     """
-    # Ignores direct/private messages.
-    if msg.guild is None:
-        return
-
     # Only processes commands if called by users as specified in the config.
     if msg.author.id in config["user_ids"]:
         await bot.process_commands(msg)

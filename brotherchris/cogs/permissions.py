@@ -25,6 +25,7 @@ class Permissions:
         self.config: Dict = utils.load_config("Permissions")
 
     @commands.command()
+    @commands.guild_only()
     async def perms(self,
                     ctx,
                     user: discord.User = None,
