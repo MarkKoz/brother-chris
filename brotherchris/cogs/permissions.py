@@ -28,7 +28,7 @@ class Permissions:
     @commands.guild_only()
     async def perms(
             self,
-            ctx,
+            ctx: commands.Context,
             user: discord.User = None,
             channel: discord.TextChannel = None):
         msg: discord.Message = ctx.message
@@ -102,9 +102,10 @@ class Permissions:
         return lst
 
     @staticmethod
-    def get_string(perms: List[Permission],
-                   category: Category,
-                   width: int) -> str:
+    def get_string(
+            perms: List[Permission],
+            category: Category,
+            width: int) -> str:
         return "".join(
             f"{p.name.ljust(width)} `{p.value}`\n"
             for p in perms if p.category == category)

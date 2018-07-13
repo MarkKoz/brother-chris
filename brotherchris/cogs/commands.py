@@ -22,7 +22,10 @@ class Commands:
 
     @commands.command()
     @commands.guild_only()
-    async def created(self, ctx, channel: discord.abc.GuildChannel = None):
+    async def created(
+            self,
+            ctx: commands.Context,
+            channel: discord.abc.GuildChannel = None):
         msg: discord.Message = ctx.message
 
         if channel is None:
@@ -37,7 +40,7 @@ class Commands:
 
     @commands.command()
     @commands.guild_only()
-    async def icon(self, ctx, user: discord.User = None):
+    async def icon(self, ctx: commands.Context, user: discord.User = None):
         msg: discord.Message = ctx.message
 
         # Deletes the command message.
@@ -64,7 +67,7 @@ class Commands:
         self.log.info(log_msg)
 
     @commands.command(name="emojiurl")
-    async def emoji_url(self, ctx, emoji: str):
+    async def emoji_url(self, ctx: commands.Context, emoji: str):
         msg: discord.Message = ctx.message
         await msg.delete()
 
@@ -80,7 +83,7 @@ class Commands:
 
     @commands.command()
     @commands.guild_only()
-    async def id(self, ctx, *, user: discord.User = None):
+    async def id(self, ctx: commands.Context, *, user: discord.User = None):
         msg: discord.Message = ctx.message
 
         if user is None:
@@ -114,7 +117,7 @@ class Commands:
     @commands.guild_only()
     async def react(
             self,
-            ctx,
+            ctx: commands.Context,
             emoji: str,
             limit: int,
             user: discord.User = None):
@@ -164,7 +167,7 @@ class Commands:
     @commands.guild_only()
     async def word_cloud(
             self,
-            ctx,
+            ctx: commands.Context,
             user: discord.User = None,
             channel: discord.TextChannel = None,
             limit: int = 1000,
