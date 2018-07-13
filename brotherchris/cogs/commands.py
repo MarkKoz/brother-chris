@@ -187,18 +187,6 @@ class Commands:
         await msg.channel.send(file=discord.File(image_path))
         pathlib.Path.unlink(image_path)
 
-        # Retrieves the word cloud attachment's URL.
-        # def check(message: discord.Message) -> bool:
-        #     if message.attachments:
-        #         return dict(message.attachments[0])["filename"] == os.path.basename(image_path)
-        #
-        #     return False
-        #
-        # imageMessage = await self.bot.wait_for_message(author = msg.author,
-        #                                                check = check)
-        # imageURL: str = dict(imageMessage.attachments[0])["url"]
-        # await self.bot.delete_message(imageMessage)
-
         # Embed properties.
         embed: discord.Embed = discord.Embed()
         embed.title = "Word Cloud"
