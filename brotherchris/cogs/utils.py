@@ -1,6 +1,7 @@
-from randomcolor import RandomColor
 from typing import Dict
 import json
+
+from randomcolor import RandomColor
 
 def loadConfig(prop: str) -> Dict:
     """

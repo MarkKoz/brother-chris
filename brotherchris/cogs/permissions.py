@@ -1,8 +1,9 @@
-from discord.ext import commands
 from enum import Enum
 from typing import Dict, List, NamedTuple
-import discord
 import logging
+
+from discord.ext import commands
+import discord
 
 from cogs import utils
 

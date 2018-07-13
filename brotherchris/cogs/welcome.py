@@ -1,7 +1,8 @@
-from discord.ext import commands
 from typing import Dict
-import discord
 import logging
+
+from discord.ext import commands
+import discord
 
 from cogs import utils
 

@@ -1,7 +1,8 @@
-from discord.ext import commands
 from typing import Pattern
-import discord
 import re
+
+from discord.ext import commands
+import discord
 
 from cogs import utils
 import logger
