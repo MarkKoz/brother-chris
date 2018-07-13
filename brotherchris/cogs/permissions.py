@@ -86,7 +86,7 @@ class Permissions:
             p.update(**{perm: True})
 
             # Iterates through every permission category.
-            cat: int
+            cat: Category
             for cat in Category:
                 # Compares the value of the enum, which is the raw bit array
                 # field of the permission category, against the bit of the
