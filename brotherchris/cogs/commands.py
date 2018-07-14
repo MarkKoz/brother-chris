@@ -8,11 +8,11 @@ import discord
 
 from cogs import utils
 
+log: logging.Logger = logging.getLogger(__name__)
+
 class Commands:
     def __init__(self, bot: commands.Bot):
         self.bot: commands.Bot = bot
-        self.log: logging.Logger = logging.getLogger("bot.cogs.Commands")
-        self.log.info("cogs.Commands loaded successfully.")
         self.emoji_pattern: Pattern = self.get_emoji_pattern()
         self.emoji_custom_pattern: Pattern = re.compile(
             r"<:[a-zA-Z0-9_]+:([0-9]+)>$")
@@ -61,7 +61,7 @@ class Commands:
                 f"{msg.author} requested {msg.guild.name}'s server icon."
 
         await msg.channel.send(embed=embed)
-        self.log.info(log_msg)
+        log.info(log_msg)
 
     @commands.command(name="emojiurl")
     async def emoji_url(self, ctx: commands.Context, emoji: str):
@@ -75,7 +75,7 @@ class Commands:
                 emoji: discord.Emoji = self.get_custom_emoji(match.group(1))
                 await msg.channel.send(emoji.url)
             except discord.InvalidArgument:
-                self.log.error(
+                log.error(
                     f"Argument 'emoji' ({emoji}) is not a valid custom emoji.")
 
     @commands.command()
@@ -106,7 +106,7 @@ class Commands:
         await msg.delete()
         await msg.channel.send(embed=embed)
 
-        self.log.info(
+        log.info(
             f"{msg.author} retrieved IDs in {msg.guild.name} "
             f"#{msg.channel.name}.")
 
@@ -137,7 +137,7 @@ class Commands:
             else:
                 emoji_string = emoji.encode("unicode_escape").decode("utf-8")
 
-            self.log.info(
+            log.info(
                 f"{msg.author} reacted with {emoji_string} to {limit} messages "
                 f"in {msg.guild.name} #{msg.channel.name}.")
 
@@ -151,12 +151,12 @@ class Commands:
                     emoji: discord.Emoji = self.get_custom_emoji(match.group(1))
                     await add_reactions(True)
                 except discord.InvalidArgument:
-                    self.log.error(
+                    log.error(
                         f"Argument 'emoji' ({emoji}) is not a valid custom "
                         f"emoji.")
             else:
                 emoji_string = emoji.encode("unicode_escape").decode("utf-8")
-                self.log.error(
+                log.error(
                     f"Argument 'emoji' ({emoji_string}) is not a valid "
                     f"Unicode emoji.")
 

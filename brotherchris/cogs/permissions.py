@@ -7,6 +7,8 @@ import discord
 
 from cogs import utils
 
+log: logging.Logger = logging.getLogger(__name__)
+
 class Category(Enum):
     GENERAL: int = discord.Permissions().general().value
     TEXT: int = discord.Permissions().text().value
@@ -20,8 +22,6 @@ class Permission(NamedTuple):
 class Permissions:
     def __init__(self, bot: commands.Bot):
         self.bot: commands.Bot = bot
-        self.log: logging.Logger = logging.getLogger("bot.cogs.Permissions")
-        self.log.info("cogs.Permissions loaded successfully.")
         self.config: Dict = utils.load_config("Permissions")
 
     @commands.command()
@@ -70,7 +70,7 @@ class Permissions:
             inline=False)
 
         await msg.channel.send(embed=embed)
-        self.log.info(
+        log.info(
             f"{msg.author} retrieved {user}'s permissions for #{channel.name} "
             f"in {msg.guild.name} #{msg.channel.name}.")
 

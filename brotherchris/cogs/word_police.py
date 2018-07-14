@@ -7,6 +7,8 @@ import discord
 
 from cogs import utils
 
+log: logging.Logger = logging.getLogger(__name__)
+
 class WordPolice:
     """
     Sends a message with word suggestions when a blacklisted word is found in a
@@ -15,8 +17,6 @@ class WordPolice:
 
     def __init__(self, bot: commands.Bot):
         self.bot: commands.Bot = bot
-        self.log: logging.Logger = logging.getLogger("bot.cogs.WordPolice")
-        self.log.info("cogs.WordPolice loaded successfully.")
         self.config: Dict = utils.load_config("WordPolice")
         self.pattern = self.get_pattern(self.config["words"])
 
@@ -134,7 +134,7 @@ class WordPolice:
                 value=value)
 
         await msg.channel.send(embed=embed)
-        self.log.info(
+        log.info(
             f"{msg.author} triggered the word police in {msg.guild.name} "
             f"#{msg.channel.name}")
 

@@ -7,11 +7,11 @@ import discord
 
 from cogs import utils
 
+log: logging.Logger = logging.getLogger(__name__)
+
 class WordCloud:
     def __init__(self, bot: commands.Bot):
         self.bot: commands.Bot = bot
-        self.log: logging.Logger = logging.getLogger("bot.cogs.WordCloud")
-        self.log.info("cogs.WordCloud loaded successfully.")
 
     @commands.command(name="wc")
     @commands.guild_only()
@@ -46,7 +46,7 @@ class WordCloud:
         embed.colour = discord.Colour(utils.get_random_colour())
 
         await msg.channel.send(embed=embed)
-        self.log.info(
+        log.info(
             f"{msg.author} generated a word cloud for {user} in "
             f"{channel.guild.name} #{channel.name}.")
 

@@ -144,7 +144,8 @@ if __name__ == "__main__":
     pattern: Pattern = re.compile(r"Unhandled event", re.IGNORECASE)
     handler: logger.StreamFiltered = logger.StreamFiltered(pattern)
 
-    bot_logger: logger.LoggerProxy = logger.LoggerProxy("bot", format_str)
+    bot_logger: logger.LoggerProxy = logger.LoggerProxy(
+        "", format_str)
     discord_logger: logger.LoggerProxy = logger.LoggerProxy(
         "discord", format_str, handler)
     log = bot_logger.log
@@ -153,9 +154,10 @@ if __name__ == "__main__":
     for extension in config["extensions"]:
         try:
             bot.load_extension(extension)
+            log.info(f"{extension} loaded successfully.")
         except Exception as e:
-            log.error(f"{extension} failed to load.\n"
-                      f"{type(e).__name__}: {e}")
+            log.error(
+                f"{extension} failed to load.\n{type(e).__name__}: {e}")
 
     bot.run(config["token"]) # Starts the bot.
 
