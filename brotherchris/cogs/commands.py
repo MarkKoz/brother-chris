@@ -204,16 +204,6 @@ class Commands:
                       f"{channel.guild.name} #{channel.name}.")
 
     @staticmethod
-    async def get_contents(
-            messages: AsyncGenerator[discord.Message, None]) -> str:
-        contents: str = ""
-
-        async for message in messages:
-            contents += f"{message.content}\n"
-
-        return contents
-
-    @staticmethod
     def get_emoji_pattern() -> Pattern:
         emojis: List[str] = sorted(
             unicode_codes.EMOJI_UNICODE.values(),
@@ -263,8 +253,8 @@ class Commands:
             return message.author == user
 
         # Generates the word cloud.
-        text: str = await self.get_contents(
-            self.get_messages(channel, limit, check))
+        text: str = "\n".join(
+            m.content async for m in self.get_messages(channel, limit, check))
 
         word_cloud: WordCloud = WordCloud(
             width=1280,
