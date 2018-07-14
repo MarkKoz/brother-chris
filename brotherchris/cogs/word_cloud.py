@@ -34,8 +34,8 @@ class WordCloud:
         await msg.delete()
 
         # Generates and posts a word cloud.
-        text: str = await self._get_text(channel, user, limit)
-        image: bytes = await self._generate_image(text, colour)
+        text: str = await self.get_text(channel, user, limit)
+        image: bytes = await self.generate_image(text, colour)
         await msg.channel.send(file=discord.File(image, filename=f"{user}.png"))
 
         # Embed properties.
@@ -51,7 +51,7 @@ class WordCloud:
             f"{channel.guild.name} #{channel.name}.")
 
     @staticmethod
-    async def _generate_image(text: str, colour: str) -> bytes:
+    async def generate_image(text: str, colour: str) -> bytes:
         word_cloud: WC = WC(
             width=1280,
             height=720,
@@ -64,7 +64,7 @@ class WordCloud:
             return bytestream.getvalue()
 
     @staticmethod
-    async def _get_text(
+    async def get_text(
             channel: discord.TextChannel,
             user: discord.User,
             limit: int
