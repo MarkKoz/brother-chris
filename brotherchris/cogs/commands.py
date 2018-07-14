@@ -1,12 +1,9 @@
-from typing import AsyncGenerator, Callable, List, Match, Pattern
+from typing import List, Match, Pattern
 import logging
-import pathlib
 import re
-import sys
 
 from discord.ext import commands
 from emoji import unicode_codes
-from wordcloud import WordCloud
 import discord
 
 from cogs import utils
@@ -163,46 +160,6 @@ class Commands:
                     f"Argument 'emoji' ({emoji_string}) is not a valid "
                     f"Unicode emoji.")
 
-    @commands.command(name="wc")
-    @commands.guild_only()
-    async def word_cloud(
-            self,
-            ctx: commands.Context,
-            user: discord.User = None,
-            channel: discord.TextChannel = None,
-            limit: int = 1000,
-            colour: str = None):
-        msg: discord.Message = ctx.message
-
-        if user is None:
-            user = msg.author
-
-        if channel is None:
-            channel = msg.channel
-
-        # Deletes the command message.
-        await msg.delete()
-
-        # Generates and posts a word cloud.
-        image_path: pathlib.Path = await self.get_word_cloud_image(
-            channel, user, limit, colour)
-
-        await msg.channel.send(file=discord.File(image_path))
-        pathlib.Path.unlink(image_path)
-
-        # Embed properties.
-        embed: discord.Embed = discord.Embed()
-        embed.title = "Word Cloud"
-        embed.description = \
-            f"Word cloud for {user.mention} in {channel.mention}."
-        embed.colour = discord.Colour(utils.get_random_colour())
-        # embed.set_image(url = imageURL)
-
-        await msg.channel.send(embed=embed)
-
-        self.log.info(f"{msg.author} generated a word cloud for {user} in "
-                      f"{channel.guild.name} #{channel.name}.")
-
     @staticmethod
     def get_emoji_pattern() -> Pattern:
         emojis: List[str] = sorted(
@@ -224,42 +181,6 @@ class Commands:
         raise discord.InvalidArgument(
             f"Argument 'emojiID' ({emojiID}) does not reference a valid custom "
             f"emoji.")
-
-    async def get_word_cloud_image(
-            self,
-            channel: discord.TextChannel,
-            user: discord.User,
-            limit: int,
-            colour: str
-            ) -> pathlib.Path:
-        def check(message: discord.Message) -> bool:
-            return message.author == user
-
-        # Generates the word cloud.
-        text: str = "\n".join(
-            m.content async for m in utils.get_messages(channel, limit, check))
-
-        word_cloud: WordCloud = WordCloud(
-            width=1280,
-            height=720,
-            background_color=colour,
-            mode="RGBA"
-            ).generate(text)
-
-        # TODO: Put path-related code into a separate function.
-        # Creates the path to the file to which the image will be saved.
-        path: pathlib.Path = pathlib.Path(sys.modules['__main__'].__file__)\
-            .with_name(".temp_wc")
-
-        if not path.exists():
-            self.log.info(f"{path.name} does not exist; it will be created.")
-
-        path.mkdir(parents=True, exist_ok=True)
-        path = path.joinpath(f"wc_{user.id}.png")
-
-        word_cloud.to_file(str(path))
-
-        return path
 
 def setup(bot: commands.Bot):
     bot.add_cog(Commands(bot))
