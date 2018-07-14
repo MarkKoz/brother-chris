@@ -1,7 +1,8 @@
-from typing import Dict
+from typing import AsyncGenerator, Callable, Dict
 import json
 
 from randomcolor import RandomColor
+import discord
 
 def load_config(prop: str) -> Dict:
     """
@@ -37,3 +38,19 @@ def get_random_colour() -> int:
         A random colour represented as a hexadecimal integer.
     """
     return int(RandomColor().generate()[0].lstrip('#'), 16)
+
+async def get_messages(
+        channel: discord.TextChannel,
+        limit: int,
+        check: Callable[[discord.Message], bool] = None
+        ) -> AsyncGenerator[discord.Message, None]:
+    counter: int = 0
+    history_limit: int = 1000
+
+    if limit > history_limit:
+        history_limit = limit
+
+    async for message in channel.history(limit=history_limit):
+        if (check is None or check(message)) and counter != limit:
+            counter += 1
+            yield message

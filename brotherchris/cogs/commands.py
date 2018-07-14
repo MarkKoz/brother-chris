@@ -131,7 +131,7 @@ class Commands:
                 return message.author == user
 
         async def add_reactions(isCustom: bool = False):
-            async for message in self.get_messages(msg.channel, limit, check):
+            async for message in utils.get_messages(msg.channel, limit, check):
                 await message.add_reaction(emoji)
 
             if isCustom:
@@ -216,23 +216,6 @@ class Commands:
 
         return re.compile(pattern)
 
-    @staticmethod
-    async def get_messages(
-            channel: discord.TextChannel,
-            limit: int,
-            check: Callable[[discord.Message], bool] = None
-            ) -> AsyncGenerator[discord.Message, None]:
-        counter: int = 0
-        history_limit: int = 1000
-
-        if limit > history_limit:
-            history_limit = limit
-
-        async for message in channel.history(limit = history_limit):
-            if (check is None or check(message)) and counter != limit:
-                counter += 1
-                yield message
-
     def get_custom_emoji(self, emojiID: str) -> discord.Emoji:
         for emoji in self.bot.emojis:
             if emoji.id == emojiID:
@@ -254,7 +237,7 @@ class Commands:
 
         # Generates the word cloud.
         text: str = "\n".join(
-            m.content async for m in self.get_messages(channel, limit, check))
+            m.content async for m in utils.get_messages(channel, limit, check))
 
         word_cloud: WordCloud = WordCloud(
             width=1280,
