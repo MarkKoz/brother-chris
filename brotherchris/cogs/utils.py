@@ -1,8 +1,8 @@
-from typing import AsyncGenerator, Callable, Dict
 import json
+from typing import AsyncGenerator, Callable, Dict
 
-from randomcolor import RandomColor
 import discord
+from randomcolor import RandomColor
 
 def load_config(prop: str) -> Dict:
     """

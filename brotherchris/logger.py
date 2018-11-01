@@ -1,6 +1,6 @@
-from typing import List, Pattern
 import logging
 import re
+from typing import List, Pattern
 
 class LoggerProxy:
     """

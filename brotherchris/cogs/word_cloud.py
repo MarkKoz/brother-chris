@@ -1,11 +1,11 @@
 import io
 import logging
 
+import discord
 from discord.ext import commands
 from wordcloud import WordCloud as WC
-import discord
 
-from cogs import utils
+from brotherchris.cogs import utils
 
 log: logging.Logger = logging.getLogger(__name__)
 

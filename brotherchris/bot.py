@@ -1,12 +1,12 @@
-from typing import Pattern
 import re
 import traceback
+from typing import Pattern
 
-from discord.ext import commands
 import discord
+from discord.ext import commands
 
-from cogs import utils
-import logger
+from brotherchris import logger
+from brotherchris.cogs import utils
 
 # Loads the configuration file.
 config: dict = utils.load_config("Bot")

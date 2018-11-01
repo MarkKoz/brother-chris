@@ -1,11 +1,11 @@
-from typing import Dict, List, Pattern
 import logging
 import re
+from typing import Dict, List, Pattern
 
-from discord.ext import commands
 import discord
+from discord.ext import commands
 
-from cogs import utils
+from brotherchris.cogs import utils
 
 log: logging.Logger = logging.getLogger(__name__)
 

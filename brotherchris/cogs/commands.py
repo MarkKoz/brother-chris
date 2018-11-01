@@ -1,12 +1,12 @@
-from typing import List, Match, Pattern
 import logging
 import re
+from typing import List, Match, Pattern
 
+import discord
 from discord.ext import commands
 from emoji import unicode_codes
-import discord
 
-from cogs import utils
+from brotherchris.cogs import utils
 
 log: logging.Logger = logging.getLogger(__name__)
 
