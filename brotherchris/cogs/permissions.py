@@ -25,7 +25,7 @@ class Permission(NamedTuple):
 class Permissions:
     def __init__(self, bot: commands.Bot):
         self.bot: commands.Bot = bot
-        self.config: Dict = utils.load_config("Permissions")
+        self.config: Dict = utils.load_config('Permissions')
 
     @commands.command()
     @commands.guild_only()
@@ -46,34 +46,34 @@ class Permissions:
         perms: List[Permission] = self.get_list(
             ctx.channel.permissions_for(ctx.author))
 
-        if self.config["justify"]:
-            width: int = self.get_max_width(perms, self.config["padding"])
+        if self.config['justify']:
+            width: int = self.get_max_width(perms, self.config['padding'])
         else:
             width: int = 0
 
         embed: discord.Embed = discord.Embed()
         embed.colour = discord.Colour(utils.get_random_colour())
-        embed.title = "Member Permissions"
+        embed.title = 'Member Permissions'
         embed.description = \
-            f"Permissions for {user.mention} in {channel.mention}."
+            f'Permissions for {user.mention} in {channel.mention}.'
 
         embed.add_field(
-            name="General Permissions",
+            name='General Permissions',
             value=self.get_string(perms, Category.GENERAL, width),
             inline=False)
         embed.add_field(
-            name="Text Permissions",
+            name='Text Permissions',
             value=self.get_string(perms, Category.TEXT, width),
             inline=False)
         embed.add_field(
-            name="Voice Permissions",
+            name='Voice Permissions',
             value=self.get_string(perms, Category.VOICE, width),
             inline=False)
 
         await ctx.send(embed=embed)
         log.info(
-            f"{ctx.author} retrieved {user}'s permissions for #{channel.name} "
-            f"in {ctx.guild.name} #{ctx.channel.name}.")
+            f'{ctx.author} retrieved {user}\'s permissions for #{channel.name} '
+            f'in {ctx.guild.name} #{ctx.channel.name}.')
 
     @staticmethod
     def get_list(perms: discord.Permissions) -> List[Permission]:
@@ -107,8 +107,8 @@ class Permissions:
             perms: List[Permission],
             category: Category,
             width: int) -> str:
-        return "".join(
-            f"{p.name.ljust(width)} `{p.value}`\n"
+        return ''.join(
+            f'{p.name.ljust(width)} `{p.value}`\n'
             for p in perms if p.category == category)
 
     @staticmethod

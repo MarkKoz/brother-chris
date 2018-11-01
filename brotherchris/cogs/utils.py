@@ -20,7 +20,7 @@ def load_config(prop: str) -> Dict:
     Dict
         The configuration for the given property.
     """
-    with open("Configuration.json") as file:
+    with open('Configuration.json') as file:
         return json.load(file)[prop]
 
 

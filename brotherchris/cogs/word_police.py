@@ -18,8 +18,8 @@ class WordPolice:
 
     def __init__(self, bot: commands.Bot):
         self.bot: commands.Bot = bot
-        self.config: Dict = utils.load_config("WordPolice")
-        self.pattern = self.get_pattern(self.config["words"])
+        self.config: Dict = utils.load_config('WordPolice')
+        self.pattern = self.get_pattern(self.config['words'])
 
     @staticmethod
     def get_pattern(lst: List[str]) -> Pattern:
@@ -43,11 +43,11 @@ class WordPolice:
         for string in lst:
             if pattern is None:
                 # Adds an opening parenthesis before the first string.
-                pattern = r"(\b" + string + r"\b"
+                pattern = r'(\b' + string + r'\b'
             else:
-                pattern += r"|\b" + re.escape(string) + r"\b"
+                pattern += r'|\b' + re.escape(string) + r'\b'
 
-        pattern += r")"
+        pattern += r')'
 
         return re.compile(pattern, re.IGNORECASE)
 
@@ -112,32 +112,32 @@ class WordPolice:
         WordPolice.split_by_length()
         """
         embed: discord.Embed = discord.Embed()
-        embed.title = "Word Police"
+        embed.title = 'Word Police'
         embed.description = \
-            f"Stop right there, {msg.author.mention}!\n" \
-            f"Perhaps you meant one of the following words instead?"
+            f'Stop right there, {msg.author.mention}!\n' \
+            f'Perhaps you meant one of the following words instead?'
         embed.colour = utils.get_random_colour()
-        embed.set_thumbnail(url=self.config["thumbnail"])
+        embed.set_thumbnail(url=self.config['thumbnail'])
 
         suggestions: Dict[int, List[str]] = self.split_by_length(
-            self.config["words"][word.lower()])
+            self.config['words'][word.lower()])
 
         length: int
         lst: List[str]
         for length, lst in suggestions.items():
-            value: str = ""
+            value: str = ''
 
             for suggestion in lst:
-                value += "\n" + suggestion
+                value += '\n' + suggestion
 
             embed.add_field(
-                name=f"{length} Letters",
+                name=f'{length} Letters',
                 value=value)
 
         await msg.channel.send(embed=embed)
         log.info(
-            f"{msg.author} triggered the word police in {msg.guild.name} "
-            f"#{msg.channel.name}")
+            f'{msg.author} triggered the word police in {msg.guild.name} '
+            f'#{msg.channel.name}')
 
     async def on_message(self, msg: discord.Message):
         """
@@ -168,7 +168,7 @@ class WordPolice:
 
         # Only processes messages which come from the servers specified in the
         # configuration.
-        if msg.guild.id in self.config["server_ids"]:
+        if msg.guild.id in self.config['server_ids']:
             matches: List[str] = re.findall(self.pattern, msg.content)
 
             # Iterates through every unique match in order of appearance.

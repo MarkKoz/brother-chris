@@ -14,7 +14,7 @@ class WordCloud:
     def __init__(self, bot: commands.Bot):
         self.bot: commands.Bot = bot
 
-    @commands.command(name="wc")
+    @commands.command(name='wc')
     @commands.guild_only()
     async def word_cloud(
             self,
@@ -35,19 +35,19 @@ class WordCloud:
         # Generates and posts a word cloud.
         text: str = await self.get_text(channel, user, limit)
         image: bytes = await self.generate_image(text, colour)
-        await ctx.send(file=discord.File(image, filename=f"{user}.png"))
+        await ctx.send(file=discord.File(image, filename=f'{user}.png'))
 
         # Embed properties.
         embed: discord.Embed = discord.Embed()
-        embed.title = "Word Cloud"
+        embed.title = 'Word Cloud'
         embed.description = \
-            f"Word cloud for {user.mention} in {channel.mention}."
+            f'Word cloud for {user.mention} in {channel.mention}.'
         embed.colour = discord.Colour(utils.get_random_colour())
 
         await ctx.send(embed=embed)
         log.info(
-            f"{ctx.author} generated a word cloud for {user} in "
-            f"{channel.guild.name} #{channel.name}.")
+            f'{ctx.author} generated a word cloud for {user} in '
+            f'{channel.guild.name} #{channel.name}.')
 
     @staticmethod
     async def generate_image(text: str, colour: str) -> bytes:
@@ -55,11 +55,11 @@ class WordCloud:
             width=1280,
             height=720,
             background_color=colour,
-            mode="RGBA"
+            mode='RGBA'
         ).generate(text)
 
         with io.BytesIO() as bytestream:
-            word_cloud.to_image().save(bytestream, format="PNG")
+            word_cloud.to_image().save(bytestream, format='PNG')
             return bytestream.getvalue()
 
     @staticmethod
@@ -70,7 +70,7 @@ class WordCloud:
     ) -> str:
         msgs = utils.get_messages(channel, limit, lambda m: m.author == user)
 
-        return "\n".join([m.content async for m in msgs])
+        return '\n'.join([m.content async for m in msgs])
 
 
 def setup(bot: commands.Bot):

@@ -16,7 +16,7 @@ class Commands:
         self.bot: commands.Bot = bot
         self.emoji_pattern: Pattern = self.get_emoji_pattern()
         self.emoji_custom_pattern: Pattern = re.compile(
-            r"<:[a-zA-Z0-9_]+:([0-9]+)>$")
+            r'<:[a-zA-Z0-9_]+:([0-9]+)>$')
 
     @commands.command()
     @commands.guild_only()
@@ -29,8 +29,8 @@ class Commands:
 
         embed: discord.Embed = discord.Embed()
         embed.colour = discord.Colour(utils.get_random_colour())
-        embed.title = "Channel Info"
-        embed.description = f"Channel created at `{channel.created_at}`."
+        embed.title = 'Channel Info'
+        embed.description = f'Channel created at `{channel.created_at}`.'
 
         await ctx.send(embed=embed)
 
@@ -43,23 +43,23 @@ class Commands:
         embed.colour = discord.Colour(utils.get_random_colour())
 
         if user is not None:
-            embed.title = "User Avatar"
-            embed.description = f"Avatar for {user.mention}."
+            embed.title = 'User Avatar'
+            embed.description = f'Avatar for {user.mention}.'
             embed.set_image(url=user.avatar_url)
 
-            log_msg: str = f"{ctx.author} requested {user}'s avatar."
+            log_msg: str = f'{ctx.author} requested {user}\'s avatar.'
         else:
-            embed.title = "Server Icon"
-            embed.description = f"Server icon for {ctx.guild.name}."
+            embed.title = 'Server Icon'
+            embed.description = f'Server icon for {ctx.guild.name}.'
             embed.set_image(url=ctx.guild.icon_url)
 
             log_msg: str = \
-                f"{ctx.author} requested {ctx.guild.name}'s server icon."
+                f'{ctx.author} requested {ctx.guild.name}\'s server icon.'
 
         await ctx.send(embed=embed)
         log.info(log_msg)
 
-    @commands.command(name="emojiurl")
+    @commands.command(name='emojiurl')
     async def emoji_url(self, ctx: commands.Context, emoji: str):
         msg: discord.Message = ctx.message
         await msg.delete()
@@ -72,7 +72,7 @@ class Commands:
                 await msg.channel.send(emoji.url)
             except discord.InvalidArgument:
                 log.error(
-                    f"Argument 'emoji' ({emoji}) is not a valid custom emoji.")
+                    f'Argument "emoji" ({emoji}) is not a valid custom emoji.')
 
     @commands.command()
     @commands.guild_only()
@@ -81,19 +81,19 @@ class Commands:
             user = ctx.author
 
         embed: discord.Embed = discord.Embed()
-        embed.title = "IDs"
-        embed.description = f"IDs for {user.mention}."
+        embed.title = 'IDs'
+        embed.description = f'IDs for {user.mention}.'
         embed.colour = discord.Colour(utils.get_random_colour())
         embed.add_field(
-            name="User:",
+            name='User:',
             value=user.id,
             inline=False)
         embed.add_field(
-            name="Current channel:",
+            name='Current channel:',
             value=ctx.channel.id,
             inline=False)
         embed.add_field(
-            name="Current server:",
+            name='Current server:',
             value=ctx.guild.id,
             inline=False)
 
@@ -101,8 +101,8 @@ class Commands:
         await ctx.send(embed=embed)
 
         log.info(
-            f"{ctx.author} retrieved IDs in {ctx.guild.name} "
-            f"#{ctx.channel.name}.")
+            f'{ctx.author} retrieved IDs in {ctx.guild.name} '
+            f'#{ctx.channel.name}.')
 
     @commands.command()
     @commands.guild_only()
@@ -128,11 +128,11 @@ class Commands:
                 # TODO: Add type annotations for emoji_string.
                 emoji_string = emoji
             else:
-                emoji_string = emoji.encode("unicode_escape").decode("utf-8")
+                emoji_string = emoji.encode('unicode_escape').decode('utf-8')
 
             log.info(
-                f"{ctx.author} reacted with {emoji_string} to {limit} messages "
-                f"in {ctx.guild.name} #{ctx.channel.name}.")
+                f'{ctx.author} reacted with {emoji_string} to {limit} messages '
+                f'in {ctx.guild.name} #{ctx.channel.name}.')
 
         if self.emoji_pattern.fullmatch(emoji):
             await add_reactions()
@@ -145,13 +145,13 @@ class Commands:
                     await add_reactions(True)
                 except discord.InvalidArgument:
                     log.error(
-                        f"Argument 'emoji' ({emoji}) is not a valid custom "
-                        f"emoji.")
+                        f'Argument "emoji" ({emoji}) is not a valid custom '
+                        f'emoji.')
             else:
-                emoji_string = emoji.encode("unicode_escape").decode("utf-8")
+                emoji_string = emoji.encode('unicode_escape').decode('utf-8')
                 log.error(
-                    f"Argument 'emoji' ({emoji_string}) is not a valid "
-                    f"Unicode emoji.")
+                    f'Argument "emoji" ({emoji_string}) is not a valid '
+                    f'Unicode emoji.')
 
     @staticmethod
     def get_emoji_pattern() -> Pattern:
@@ -160,9 +160,9 @@ class Commands:
             key=len,
             reverse=True)
 
-        pattern = u"(" + \
-            u"|".join(re.escape(e.replace(u" ", u"")) for e in emojis) + \
-            u")"
+        pattern = u'(' + \
+            u'|'.join(re.escape(e.replace(u' ', u'')) for e in emojis) + \
+            u')'
 
         return re.compile(pattern)
 
@@ -172,8 +172,8 @@ class Commands:
                 return emoji
 
         raise discord.InvalidArgument(
-            f"Argument 'emojiID' ({emojiID}) does not reference a valid custom "
-            f"emoji.")
+            f'Argument "emojiID" ({emojiID}) does not reference a valid custom '
+            f'emoji.')
 
 
 def setup(bot: commands.Bot):
