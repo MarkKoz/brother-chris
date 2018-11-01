@@ -24,25 +24,20 @@ class Commands:
             self,
             ctx: commands.Context,
             channel: discord.abc.GuildChannel = None):
-        msg: discord.Message = ctx.message
-
         if channel is None:
-            channel = msg.channel
+            channel = ctx.message.channel
 
         embed: discord.Embed = discord.Embed()
         embed.colour = discord.Colour(utils.get_random_colour())
         embed.title = "Channel Info"
         embed.description = f"Channel created at `{channel.created_at}`."
 
-        await msg.channel.send(embed=embed)
+        await ctx.send(embed=embed)
 
     @commands.command()
     @commands.guild_only()
     async def icon(self, ctx: commands.Context, user: discord.User = None):
-        msg: discord.Message = ctx.message
-
-        # Deletes the command message.
-        await msg.delete()
+        await ctx.message.delete()
 
         embed: discord.Embed = discord.Embed()
         embed.colour = discord.Colour(utils.get_random_colour())
@@ -52,16 +47,16 @@ class Commands:
             embed.description = f"Avatar for {user.mention}."
             embed.set_image(url=user.avatar_url)
 
-            log_msg: str = f"{msg.author} requested {user}'s avatar."
+            log_msg: str = f"{ctx.author} requested {user}'s avatar."
         else:
             embed.title = "Server Icon"
-            embed.description = f"Server icon for {msg.guild.name}."
-            embed.set_image(url=msg.guild.icon_url)
+            embed.description = f"Server icon for {ctx.guild.name}."
+            embed.set_image(url=ctx.guild.icon_url)
 
             log_msg: str = \
-                f"{msg.author} requested {msg.guild.name}'s server icon."
+                f"{ctx.author} requested {ctx.guild.name}'s server icon."
 
-        await msg.channel.send(embed=embed)
+        await ctx.send(embed=embed)
         log.info(log_msg)
 
     @commands.command(name="emojiurl")
@@ -82,10 +77,8 @@ class Commands:
     @commands.command()
     @commands.guild_only()
     async def id(self, ctx: commands.Context, *, user: discord.User = None):
-        msg: discord.Message = ctx.message
-
         if user is None:
-            user = msg.author
+            user = ctx.author
 
         embed: discord.Embed = discord.Embed()
         embed.title = "IDs"
@@ -97,19 +90,19 @@ class Commands:
             inline=False)
         embed.add_field(
             name="Current channel:",
-            value=msg.channel.id,
+            value=ctx.channel.id,
             inline=False)
         embed.add_field(
             name="Current server:",
-            value=msg.guild.id,
+            value=ctx.guild.id,
             inline=False)
 
-        await msg.delete()
-        await msg.channel.send(embed=embed)
+        await ctx.message.delete()
+        await ctx.send(embed=embed)
 
         log.info(
-            f"{msg.author} retrieved IDs in {msg.guild.name} "
-            f"#{msg.channel.name}.")
+            f"{ctx.author} retrieved IDs in {ctx.guild.name} "
+            f"#{ctx.channel.name}.")
 
     @commands.command()
     @commands.guild_only()
@@ -119,8 +112,7 @@ class Commands:
             emoji: str,
             limit: int,
             user: discord.User = None):
-        msg: discord.Message = ctx.message
-        await msg.delete()
+        await ctx.message.delete()
 
         if user is None:
             check = None
@@ -129,7 +121,7 @@ class Commands:
                 return message.author == user
 
         async def add_reactions(isCustom: bool = False):
-            async for message in utils.get_messages(msg.channel, limit, check):
+            async for message in utils.get_messages(ctx.channel, limit, check):
                 await message.add_reaction(emoji)
 
             if isCustom:
@@ -139,8 +131,8 @@ class Commands:
                 emoji_string = emoji.encode("unicode_escape").decode("utf-8")
 
             log.info(
-                f"{msg.author} reacted with {emoji_string} to {limit} messages "
-                f"in {msg.guild.name} #{msg.channel.name}.")
+                f"{ctx.author} reacted with {emoji_string} to {limit} messages "
+                f"in {ctx.guild.name} #{ctx.channel.name}.")
 
         if self.emoji_pattern.fullmatch(emoji):
             await add_reactions()

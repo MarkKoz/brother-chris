@@ -24,21 +24,18 @@ class WordCloud:
             limit: int = 1000,
             colour: str = None
     ):
-        msg: discord.Message = ctx.message
-
         if user is None:
-            user = msg.author
+            user = ctx.author
 
         if channel is None:
-            channel = msg.channel
+            channel = ctx.channel
 
-        # Deletes the command message.
-        await msg.delete()
+        await ctx.message.delete()
 
         # Generates and posts a word cloud.
         text: str = await self.get_text(channel, user, limit)
         image: bytes = await self.generate_image(text, colour)
-        await msg.channel.send(file=discord.File(image, filename=f"{user}.png"))
+        await ctx.send(file=discord.File(image, filename=f"{user}.png"))
 
         # Embed properties.
         embed: discord.Embed = discord.Embed()
@@ -47,9 +44,9 @@ class WordCloud:
             f"Word cloud for {user.mention} in {channel.mention}."
         embed.colour = discord.Colour(utils.get_random_colour())
 
-        await msg.channel.send(embed=embed)
+        await ctx.send(embed=embed)
         log.info(
-            f"{msg.author} generated a word cloud for {user} in "
+            f"{ctx.author} generated a word cloud for {user} in "
             f"{channel.guild.name} #{channel.name}.")
 
     @staticmethod

@@ -92,34 +92,33 @@ async def on_command_error(ctx: commands.Context, error: commands.CommandError):
         return
 
     if isinstance(error, commands.NoPrivateMessage):
-        await ctx.author.send("This command cannot be used in direct messages.")
+        await ctx.send("This command cannot be used in direct messages.")
     elif isinstance(error, commands.TooManyArguments):
-        await ctx.message.channel.send("Too many arguments.")
+        await ctx.send("Too many arguments.")
     elif isinstance(error, commands.MissingRequiredArgument):
-        await ctx.message.channel.send(
-            f"Missing required argument `{error.param.name}`.")
+        await ctx.send(f"Missing required argument `{error.param.name}`.")
     elif isinstance(error, commands.NotOwner) or \
             isinstance(error, commands.MissingPermissions):
-        await ctx.message.channel.send(
+        await ctx.send(
             "You do not have the required permissions to invoke this "
             "command.")
     elif isinstance(error, commands.CommandOnCooldown) or \
             isinstance(error, commands.CheckFailure):
-        await ctx.message.channel.send(error)
+        await ctx.send(error)
     elif isinstance(error, commands.DisabledCommand):
-        await ctx.message.channel.send(
+        await ctx.send(
             f"This command is currently disabled and cannot be used.")
     elif isinstance(error, commands.BadArgument):
-        await ctx.message.channel.send(f"Bad argument: {error}")
+        await ctx.send(f"Bad argument: {error}")
     elif isinstance(error, commands.BotMissingPermissions):
-        await ctx.message.channel.send(
+        await ctx.send(
             "Oops! The bot does not have the required permissions to "
             "execute this command.")
         log.error(
             f"{ctx.command.qualified_name} cannot be executed because the bot "
             f"is missing the following permissions: {', '.join(error.list)}")
     elif isinstance(error, commands.CommandInvokeError):
-        await ctx.message.channel.send("Something went wrong internally!")
+        await ctx.send("Something went wrong internally!")
         log.error(
             f"{ctx.command.qualified_name} failed to execute. "
             f"{error.original.__class__.__name__}: {error.original}\n"
@@ -145,7 +144,6 @@ async def global_user_check(ctx: commands.Context) -> bool:
 
 
 if __name__ == "__main__":
-    # Loads extensions.
     for extension in config["extensions"]:
         try:
             bot.load_extension(extension)
@@ -153,4 +151,4 @@ if __name__ == "__main__":
         except Exception as e:
             log.error(f"{extension} failed to load.\n{type(e).__name__}: {e}")
 
-    bot.run(config["token"])  # Starts the bot.
+    bot.run(config["token"])

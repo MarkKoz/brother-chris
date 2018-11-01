@@ -34,19 +34,17 @@ class Permissions:
             ctx: commands.Context,
             user: discord.User = None,
             channel: discord.TextChannel = None):
-        msg: discord.Message = ctx.message
-
         if user is None:
-            user = msg.author
+            user = ctx.author
 
         if channel is None:
-            channel = msg.channel
+            channel = ctx.channel
 
         # Deletes the command message.
-        await msg.delete()
+        await ctx.message.delete()
 
         perms: List[Permission] = self.get_list(
-            msg.channel.permissions_for(msg.author))
+            ctx.channel.permissions_for(ctx.author))
 
         if self.config["justify"]:
             width: int = self.get_max_width(perms, self.config["padding"])
@@ -72,10 +70,10 @@ class Permissions:
             value=self.get_string(perms, Category.VOICE, width),
             inline=False)
 
-        await msg.channel.send(embed=embed)
+        await ctx.send(embed=embed)
         log.info(
-            f"{msg.author} retrieved {user}'s permissions for #{channel.name} "
-            f"in {msg.guild.name} #{msg.channel.name}.")
+            f"{ctx.author} retrieved {user}'s permissions for #{channel.name} "
+            f"in {ctx.guild.name} #{ctx.channel.name}.")
 
     @staticmethod
     def get_list(perms: discord.Permissions) -> List[Permission]:
