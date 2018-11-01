@@ -19,4 +19,5 @@ wordcloud = "*"
 python_version = "3.6"
 
 [scripts]
+start = "python -m brotherchris"
 lint = "python -m flake8"
