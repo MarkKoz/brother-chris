@@ -10,6 +10,7 @@ from brotherchris.cogs import utils
 
 log: logging.Logger = logging.getLogger(__name__)
 
+
 class Commands:
     def __init__(self, bot: commands.Bot):
         self.bot: commands.Bot = bot
@@ -181,6 +182,7 @@ class Commands:
         raise discord.InvalidArgument(
             f"Argument 'emojiID' ({emojiID}) does not reference a valid custom "
             f"emoji.")
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(Commands(bot))

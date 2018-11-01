@@ -2,16 +2,20 @@ import logging
 import re
 from typing import List, Pattern
 
+DEFAULT_HANDLER: logging.Handler = logging.StreamHandler()
+
+
 class LoggerProxy:
     """
     A proxy class for :class:`Logger<logging.Logger>`. The logging levels are
     set to :attr:`INFO<logging.INFO>`.
     """
     def __init__(
-            self,
-            name: str,
-            strFormat: str,
-            handler: logging.Handler = logging.StreamHandler()):
+        self,
+        name: str,
+        strFormat: str,
+        handler: logging.Handler = DEFAULT_HANDLER
+    ):
         """
         Parameters
         ----------
@@ -45,6 +49,7 @@ class LoggerProxy:
         for handler in handlers:
             handler.close()
             self.log.removeHandler(handler)
+
 
 class StreamFiltered(logging.StreamHandler):
     """

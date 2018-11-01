@@ -4,6 +4,7 @@ from typing import AsyncGenerator, Callable, Dict
 import discord
 from randomcolor import RandomColor
 
+
 def load_config(prop: str) -> Dict:
     """
     Retrieves the configuration for the given property as a
@@ -22,6 +23,7 @@ def load_config(prop: str) -> Dict:
     with open("Configuration.json") as file:
         return json.load(file)[prop]
 
+
 def get_random_colour() -> int:
     """
     Generates a random colour as a hexadecimal integer.
@@ -39,11 +41,12 @@ def get_random_colour() -> int:
     """
     return int(RandomColor().generate()[0].lstrip('#'), 16)
 
+
 async def get_messages(
-        channel: discord.TextChannel,
-        limit: int,
-        check: Callable[[discord.Message], bool] = None
-        ) -> AsyncGenerator[discord.Message, None]:
+    channel: discord.TextChannel,
+    limit: int,
+    check: Callable[[discord.Message], bool] = None
+) -> AsyncGenerator[discord.Message, None]:
     counter: int = 0
     history_limit: int = 1000
 

@@ -9,6 +9,7 @@ from brotherchris.cogs import utils
 
 log: logging.Logger = logging.getLogger(__name__)
 
+
 class WordPolice:
     """
     Sends a message with word suggestions when a blacklisted word is found in a

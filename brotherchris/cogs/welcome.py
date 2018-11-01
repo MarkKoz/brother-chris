@@ -8,6 +8,7 @@ from brotherchris.cogs import utils
 
 log: logging.Logger = logging.getLogger(__name__)
 
+
 class Welcome:
     """
     Welcomes users welcomed by the Dyno bot.
@@ -54,6 +55,7 @@ class Welcome:
             log.info(
                 f"Welcomed {msg.mentions[0]} in {msg.guild.name} "
                 f"#{msg.channel.name}")
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(Welcome(bot))

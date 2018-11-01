@@ -13,10 +13,11 @@ config: dict = utils.load_config("Bot")
 name: str = config["name"]
 
 bot: commands.Bot = commands.Bot(
-    command_prefix = config["prefixes"],
-    description = name,
-    pm_help = None,
-    help_attrs = dict(hidden = True))
+    command_prefix=config["prefixes"],
+    description=name,
+    pm_help=None,
+    help_attrs=dict(hidden=True))
+
 
 @bot.event
 async def on_ready():
@@ -38,6 +39,7 @@ async def on_ready():
     """
     log.info(f"{name} logged in as {bot.user} ({bot.user.id})")
 
+
 @bot.event
 async def on_resumed():
     """
@@ -48,6 +50,7 @@ async def on_resumed():
     None
     """
     log.info(f"{name} resumed.")
+
 
 @bot.event
 async def on_message(msg: discord.Message):
@@ -66,6 +69,7 @@ async def on_message(msg: discord.Message):
     """
     if not msg.author.bot:
         await bot.process_commands(msg)
+
 
 @bot.event
 async def on_command_error(ctx: commands.Context, error: commands.CommandError):
@@ -121,6 +125,7 @@ async def on_command_error(ctx: commands.Context, error: commands.CommandError):
             f"{error.original.__class__.__name__}: {error.original}\n"
             f"{''.join(traceback.format_tb(error.original.__traceback__))}")
 
+
 @bot.check
 async def global_user_check(ctx: commands.Context) -> bool:
     """
@@ -137,6 +142,7 @@ async def global_user_check(ctx: commands.Context) -> bool:
         True if the invoking user is permitted; False otherwise.
     """
     return ctx.message.author.id in config["user_ids"]
+
 
 if __name__ == "__main__":
     # Creates loggers.
@@ -159,7 +165,7 @@ if __name__ == "__main__":
             log.error(
                 f"{extension} failed to load.\n{type(e).__name__}: {e}")
 
-    bot.run(config["token"]) # Starts the bot.
+    bot.run(config["token"])  # Starts the bot.
 
     # Closes and removes logging handlers.
     bot_logger.close()

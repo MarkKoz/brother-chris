@@ -9,15 +9,18 @@ from brotherchris.cogs import utils
 
 log: logging.Logger = logging.getLogger(__name__)
 
+
 class Category(Enum):
     GENERAL: int = discord.Permissions().general().value
     TEXT: int = discord.Permissions().text().value
     VOICE: int = discord.Permissions().voice().value
 
+
 class Permission(NamedTuple):
     name: str
     value: bool
     category: Category
+
 
 class Permissions:
     def __init__(self, bot: commands.Bot):
@@ -113,6 +116,7 @@ class Permissions:
     @staticmethod
     def get_max_width(perms: List[Permission], padding: int) -> int:
         return max(len(p.name) for p in perms) + padding
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(Permissions(bot))

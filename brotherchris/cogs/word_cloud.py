@@ -9,6 +9,7 @@ from brotherchris.cogs import utils
 
 log: logging.Logger = logging.getLogger(__name__)
 
+
 class WordCloud:
     def __init__(self, bot: commands.Bot):
         self.bot: commands.Bot = bot
@@ -21,7 +22,8 @@ class WordCloud:
             user: discord.User = None,
             channel: discord.TextChannel = None,
             limit: int = 1000,
-            colour: str = None):
+            colour: str = None
+    ):
         msg: discord.Message = ctx.message
 
         if user is None:
@@ -57,7 +59,7 @@ class WordCloud:
             height=720,
             background_color=colour,
             mode="RGBA"
-            ).generate(text)
+        ).generate(text)
 
         with io.BytesIO() as bytestream:
             word_cloud.to_image().save(bytestream, format="PNG")
@@ -65,13 +67,14 @@ class WordCloud:
 
     @staticmethod
     async def get_text(
-            channel: discord.TextChannel,
-            user: discord.User,
-            limit: int
-            ) -> str:
+        channel: discord.TextChannel,
+        user: discord.User,
+        limit: int
+    ) -> str:
         msgs = utils.get_messages(channel, limit, lambda m: m.author == user)
 
         return "\n".join([m.content async for m in msgs])
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(WordCloud(bot))
