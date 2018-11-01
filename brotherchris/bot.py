@@ -1,12 +1,12 @@
-import re
+import logging
 import traceback
-from typing import Pattern
 
 import discord
 from discord.ext import commands
 
-from brotherchris import logger
 from brotherchris.cogs import utils
+
+log: logging.Logger = logging.getLogger(__name__)
 
 # Loads the configuration file.
 config: dict = utils.load_config("Bot")
@@ -145,28 +145,12 @@ async def global_user_check(ctx: commands.Context) -> bool:
 
 
 if __name__ == "__main__":
-    # Creates loggers.
-    format_str: str = "%(asctime)s - [%(levelname)s] %(name)s: %(message)s"
-    pattern: Pattern = re.compile(r"Unhandled event", re.IGNORECASE)
-    handler: logger.StreamFiltered = logger.StreamFiltered(pattern)
-
-    bot_logger: logger.LoggerProxy = logger.LoggerProxy(
-        "", format_str)
-    discord_logger: logger.LoggerProxy = logger.LoggerProxy(
-        "discord", format_str, handler)
-    log = bot_logger.log
-
     # Loads extensions.
     for extension in config["extensions"]:
         try:
             bot.load_extension(extension)
             log.info(f"{extension} loaded successfully.")
         except Exception as e:
-            log.error(
-                f"{extension} failed to load.\n{type(e).__name__}: {e}")
+            log.error(f"{extension} failed to load.\n{type(e).__name__}: {e}")
 
     bot.run(config["token"])  # Starts the bot.
-
-    # Closes and removes logging handlers.
-    bot_logger.close()
-    discord_logger.close()
