@@ -139,9 +139,18 @@ class BrotherChris(commands.Bot):
         Returns
         -------
         bool
-            True if the invoking user is permitted; False otherwise.
+            True if the invoking user is permitted.
+
+        Raises
+        ------
+        commands.CheckFailure
+            If the invoking user is not permitted.
         """
-        return ctx.message.author.id in config["user_ids"]
+        if ctx.message.author.id not in config["user_ids"]:
+            raise commands.CheckFailure(
+                'Sorry, you are not whitelisted to use commands.')
+
+        return True
 
 
 if __name__ == "__main__":
