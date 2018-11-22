@@ -48,13 +48,16 @@ class Welcome:
         # configuration.
         # Checks if the author is the Dyno bot and if the message contains
         # the welcome string specified in the configuration.
-        if msg.channel.id in self.config['channels'] and \
-                msg.author.id == self.config['dyno_id'] and \
-                self.config['dyno_msg'] in msg.content:
+        if (
+            msg.channel.id in self.config['channels']
+            and msg.author.id == self.config['dyno_id']
+            and self.config['dyno_msg'] in msg.content
+        ):
             await msg.channel.send(f'Welcome {msg.mentions[0].mention}!')
             log.info(
                 f'Welcomed {msg.mentions[0]} in {msg.guild.name} '
-                f'#{msg.channel.name}')
+                f'#{msg.channel.name}'
+            )
 
 
 def setup(bot: commands.Bot):

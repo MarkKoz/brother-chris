@@ -17,12 +17,12 @@ class WordCloud:
     @commands.command(name='wc')
     @commands.guild_only()
     async def word_cloud(
-            self,
-            ctx: commands.Context,
-            user: discord.User = None,
-            channel: discord.TextChannel = None,
-            limit: int = 1000,
-            colour: str = None
+        self,
+        ctx: commands.Context,
+        user: discord.User = None,
+        channel: discord.TextChannel = None,
+        limit: int = 1000,
+        colour: str = None
     ):
         if user is None:
             user = ctx.author
@@ -33,8 +33,8 @@ class WordCloud:
         await ctx.message.delete()
 
         # Generates and posts a word cloud.
-        text: str = await self.get_text(channel, user, limit)
-        image: bytes = await self.generate_image(text, colour)
+        text = await self.get_text(channel, user, limit)
+        image = await self.generate_image(text, colour)
         await ctx.send(file=discord.File(image, filename=f'{user}.png'))
 
         # Embed properties.
@@ -47,11 +47,12 @@ class WordCloud:
         await ctx.send(embed=embed)
         log.info(
             f'{ctx.author} generated a word cloud for {user} in '
-            f'{channel.guild.name} #{channel.name}.')
+            f'{channel.guild.name} #{channel.name}.'
+        )
 
     @staticmethod
     async def generate_image(text: str, colour: str) -> bytes:
-        word_cloud: WC = WC(
+        word_cloud = WC(
             width=1280,
             height=720,
             background_color=colour,
@@ -69,7 +70,6 @@ class WordCloud:
         limit: int
     ) -> str:
         msgs = utils.get_messages(channel, limit, lambda m: m.author == user)
-
         return '\n'.join([m.content async for m in msgs])
 
 

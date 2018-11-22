@@ -47,8 +47,8 @@ async def get_messages(
     limit: int,
     check: Callable[[discord.Message], bool] = None
 ) -> AsyncGenerator[discord.Message, None]:
-    counter: int = 0
-    history_limit: int = 1000
+    counter = 0
+    history_limit = 1000
 
     if limit > history_limit:
         history_limit = limit

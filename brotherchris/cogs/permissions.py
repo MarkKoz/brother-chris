@@ -1,6 +1,6 @@
 import logging
 from enum import Enum
-from typing import Dict, List, NamedTuple
+from typing import List, NamedTuple
 
 import discord
 from discord.ext import commands
@@ -25,15 +25,16 @@ class Permission(NamedTuple):
 class Permissions:
     def __init__(self, bot: commands.Bot):
         self.bot: commands.Bot = bot
-        self.config: Dict = utils.load_config('Permissions')
+        self.config: dict = utils.load_config('Permissions')
 
     @commands.command()
     @commands.guild_only()
     async def perms(
-            self,
-            ctx: commands.Context,
-            user: discord.User = None,
-            channel: discord.TextChannel = None):
+        self,
+        ctx: commands.Context,
+        user: discord.User = None,
+        channel: discord.TextChannel = None
+    ):
         if user is None:
             user = ctx.author
 
@@ -43,15 +44,14 @@ class Permissions:
         # Deletes the command message.
         await ctx.message.delete()
 
-        perms: List[Permission] = self.get_list(
-            ctx.channel.permissions_for(ctx.author))
+        perms = self.get_list(ctx.channel.permissions_for(ctx.author))
 
         if self.config['justify']:
-            width: int = self.get_max_width(perms, self.config['padding'])
+            width = self.get_max_width(perms, self.config['padding'])
         else:
-            width: int = 0
+            width = 0
 
-        embed: discord.Embed = discord.Embed()
+        embed = discord.Embed()
         embed.colour = discord.Colour(utils.get_random_colour())
         embed.title = 'Member Permissions'
         embed.description = \
@@ -60,20 +60,24 @@ class Permissions:
         embed.add_field(
             name='General Permissions',
             value=self.get_string(perms, Category.GENERAL, width),
-            inline=False)
+            inline=False
+        )
         embed.add_field(
             name='Text Permissions',
             value=self.get_string(perms, Category.TEXT, width),
-            inline=False)
+            inline=False
+        )
         embed.add_field(
             name='Voice Permissions',
             value=self.get_string(perms, Category.VOICE, width),
-            inline=False)
+            inline=False
+        )
 
         await ctx.send(embed=embed)
         log.info(
             f'{ctx.author} retrieved {user}\'s permissions for #{channel.name} '
-            f'in {ctx.guild.name} #{ctx.channel.name}.')
+            f'in {ctx.guild.name} #{ctx.channel.name}.'
+        )
 
     @staticmethod
     def get_list(perms: discord.Permissions) -> List[Permission]:
@@ -84,14 +88,13 @@ class Permissions:
         for perm, value in perms:
             # Creates a Permissions object with no bits set for the purpose of
             # comparison.
-            p: discord.Permissions = discord.Permissions().none()
+            p = discord.Permissions().none()
 
             # Updates the bit that corresponds to the current permission in the
             # loop iteration.
             p.update(**{perm: True})
 
             # Iterates through every permission category.
-            cat: Category
             for cat in Category:
                 # Compares the value of the enum, which is the raw bit array
                 # field of the permission category, against the bit of the
@@ -106,10 +109,12 @@ class Permissions:
     def get_string(
             perms: List[Permission],
             category: Category,
-            width: int) -> str:
+            width: int
+    ) -> str:
         return ''.join(
             f'{p.name.ljust(width)} `{p.value}`\n'
-            for p in perms if p.category == category)
+            for p in perms if p.category == category
+        )
 
     @staticmethod
     def get_max_width(perms: List[Permission], padding: int) -> int:
