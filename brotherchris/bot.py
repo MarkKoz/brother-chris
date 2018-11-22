@@ -39,7 +39,8 @@ class BrotherChris(commands.Bot):
         None
         """
         log.info(
-            f'{self.description} logged in as {self.user} ({self.user.id})')
+            f'{self.description} logged in as {self.user} ({self.user.id}).'
+        )
 
     async def on_resumed(self):
         """
@@ -98,33 +99,42 @@ class BrotherChris(commands.Bot):
             await ctx.send('Too many arguments.')
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(f'Missing required argument `{error.param.name}`.')
-        elif isinstance(error, commands.NotOwner) or \
-                isinstance(error, commands.MissingPermissions):
+        elif (
+            isinstance(error, commands.NotOwner)
+            or isinstance(error, commands.MissingPermissions)
+        ):
             await ctx.send(
                 'You do not have the required permissions to invoke this '
-                'command.')
-        elif isinstance(error, commands.CommandOnCooldown) or \
-                isinstance(error, commands.CheckFailure):
+                'command.'
+            )
+        elif (
+            isinstance(error, commands.CommandOnCooldown)
+            or isinstance(error, commands.CheckFailure)
+        ):
             await ctx.send(error)
         elif isinstance(error, commands.DisabledCommand):
             await ctx.send(
-                f'This command is currently disabled and cannot be used.')
+                'This command is currently disabled and cannot be used.'
+            )
         elif isinstance(error, commands.BadArgument):
             await ctx.send(f'Bad argument: {error}')
         elif isinstance(error, commands.BotMissingPermissions):
             await ctx.send(
                 'Oops! The bot does not have the required permissions to '
-                'execute this command.')
+                'execute this command.'
+            )
             log.error(
                 f'{ctx.command.qualified_name} cannot be executed because the '
                 f'bot is missing the following permissions: '
-                f'{", ".join(error.list)}')
+                f'{", ".join(error.list)}'
+            )
         elif isinstance(error, commands.CommandInvokeError):
             await ctx.send('Something went wrong internally!')
             log.error(
                 f'{ctx.command.qualified_name} failed to execute. '
                 f'{error.original.__class__.__name__}: {error.original}\n'
-                f'{"".join(traceback.format_tb(error.original.__traceback__))}')
+                f'{"".join(traceback.format_tb(error.original.__traceback__))}'
+            )
 
     @staticmethod
     async def global_user_check(ctx: commands.Context) -> bool:
@@ -148,6 +158,7 @@ class BrotherChris(commands.Bot):
         """
         if ctx.message.author.id not in config['user_ids']:
             raise commands.CheckFailure(
-                'Sorry, you are not whitelisted to use commands.')
+                'Sorry, you are not whitelisted to use commands.'
+            )
 
         return True

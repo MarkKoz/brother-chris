@@ -1,6 +1,7 @@
 import logging
 import re
-from typing import Dict, List, Pattern
+from itertools import groupby
+from typing import Dict, List, Iterator, Pattern, Tuple
 
 import discord
 from discord.ext import commands
@@ -38,61 +39,39 @@ class WordPolice:
             The compiled regular expression pattern.
         """
         pattern: str = None
-
-        string: str
         for string in lst:
             if pattern is None:
                 # Adds an opening parenthesis before the first string.
-                pattern = r'(\b' + string + r'\b'
+                pattern = fr'(\b{string}\b'
             else:
-                pattern += r'|\b' + re.escape(string) + r'\b'
+                pattern += fr'|\b{re.escape(string)}\b'
 
         pattern += r')'
-
         return re.compile(pattern, re.IGNORECASE)
 
     @staticmethod
-    def split_by_length(lst: List[str]) -> Dict[int, List[str]]:
+    def group_by_length(lst: List[str]) -> Iterator[Tuple[int, Iterator[str]]]:
         """
-        Splits :any:`lst` into separate :class:`lists<list>` which are grouped
-        based on the length of the :class:`strings<str>`.
-
-        These lists are mapped to a :class:`dictionary<dict>`, where the keys
-        are the lengths and the values are the lists of strings.
+        Group strings in `lst` by their lengths and sort each group
+        alphabetically.
 
         Parameters
         ----------
         lst: List[str]
-            A list of strings to split.
+            A list of strings to group.
 
         Returns
         -------
-        Dict[int, List[str]]
-            A dictionary of lengths and lists of strings which are of those
+        Iterator[Tuple[int, Iterator[str]]]
+            Tuples of lengths and lists of strings which are of those
             lengths.
         """
-        # TODO: Sort strings alphabetically.
-        out: Dict[int, List[str]] = dict()
-
-        string: str
-        for string in lst:
-            length: int = len(string)
-
-            # Checks if there are no strings stored for the length of the
-            # current string.
-            if length not in out.keys():
-                # Creates a new list containing the current string.
-                out[length] = [string]
-            else:
-                # Appends to the list which was created above at some earlier
-                # point.
-                out[length].append(string)
-
-        return out
+        lst.sort(key=lambda s: (len(s), s))
+        return groupby(lst, key=len)
 
     async def send_message(self, msg: discord.Message, word: str):
         """
-        Creates and sends an :class:`embed<discord.Embed>` which suggests
+        Create and send an :class:`embed<discord.Embed>` which suggests
         possible alternatives for the word which triggered the Word Police.
 
         Parameters
@@ -101,15 +80,6 @@ class WordPolice:
             The message which triggered the Word Police.
         word: str
             The word which triggered the Word Police.
-        Returns
-        -------
-        None
-
-        See Also
-        -------
-        discord.Client.send_message()
-        discord.Embed()
-        WordPolice.split_by_length()
         """
         embed: discord.Embed = discord.Embed()
         embed.title = 'Word Police'
@@ -119,25 +89,16 @@ class WordPolice:
         embed.colour = utils.get_random_colour()
         embed.set_thumbnail(url=self.config['thumbnail'])
 
-        suggestions: Dict[int, List[str]] = self.split_by_length(
-            self.config['words'][word.lower()])
+        suggestions = self.group_by_length(self.config['words'][word.lower()])
 
-        length: int
-        lst: List[str]
-        for length, lst in suggestions.items():
-            value: str = ''
-
-            for suggestion in lst:
-                value += '\n' + suggestion
-
-            embed.add_field(
-                name=f'{length} Letters',
-                value=value)
+        for length, lst in suggestions:
+            embed.add_field(name=f'{length} Letters', value='\n'.join(lst))
 
         await msg.channel.send(embed=embed)
         log.info(
             f'{msg.author} triggered the word police in {msg.guild.name} '
-            f'#{msg.channel.name}')
+            f'#{msg.channel.name}'
+        )
 
     async def on_message(self, msg: discord.Message):
         """
@@ -152,15 +113,6 @@ class WordPolice:
         ----------
         msg: discord.Message
             The message the creation of which called this event.
-
-        Returns
-        -------
-        None
-
-        See Also
-        --------
-        WordPolice.get_pattern()
-        WordPolice.send_message()
         """
         # Ignores direct messages.
         if msg.author.bot or msg.guild is None:
@@ -169,7 +121,7 @@ class WordPolice:
         # Only processes messages which come from the servers specified in the
         # configuration.
         if msg.guild.id in self.config['server_ids']:
-            matches: List[str] = re.findall(self.pattern, msg.content)
+            matches = re.findall(self.pattern, msg.content)
 
             # Iterates through every unique match in order of appearance.
             for match in dict.fromkeys(matches):
