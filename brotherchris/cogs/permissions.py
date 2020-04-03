@@ -75,7 +75,7 @@ class Permissions:
 
         await ctx.send(embed=embed)
         log.info(
-            f'{ctx.author} retrieved {user}\'s permissions for #{channel.name} '
+            f"{ctx.author} retrieved {user}'s permissions for #{channel.name} "
             f'in {ctx.guild.name} #{ctx.channel.name}.'
         )
 

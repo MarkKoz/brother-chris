@@ -47,14 +47,14 @@ class Commands:
             embed.description = f'Avatar for {user.mention}.'
             embed.set_image(url=user.avatar_url)
 
-            log_msg = f'{ctx.author} requested {user}\'s avatar.'
+            log_msg = f"{ctx.author} requested {user}'s avatar."
         else:
             embed.title = 'Server Icon'
             embed.description = f'Server icon for {ctx.guild.name}.'
             embed.set_image(url=ctx.guild.icon_url)
 
             log_msg = \
-                f'{ctx.author} requested {ctx.guild.name}\'s server icon.'
+                f"{ctx.author} requested {ctx.guild.name}'s server icon."
 
         await ctx.send(embed=embed)
         log.info(log_msg)

@@ -1,7 +1,7 @@
 import logging
 import re
 from itertools import groupby
-from typing import Dict, List, Iterator, Pattern, Tuple
+from typing import Dict, Iterator, List, Pattern, Tuple
 
 import discord
 from discord.ext import commands
