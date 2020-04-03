@@ -45,7 +45,7 @@ the bare-minimum required for the bot to run properly.
             123456789012345678
         ],
         "extensions": [
-            "cogs.Commands"
+            "brotherchris.cogs.Commands"
         ],
         "prefixes": [
             "!",
@@ -121,9 +121,7 @@ welcome.
 
 ### Requirements
 #### Binaries
-* [Python 3.6](https://www.python.org/downloads/)
-    * discord.py or one of its dependencies may currently have issues with
-    Python 3.7.
+* [Python 3.8](https://www.python.org/downloads/)
 
 #### Packages
 > **Note** pipenv can install these automatically (apart from pipenv itself)
@@ -161,11 +159,11 @@ pipenv install /path/to/wordcloud-wheel-file.whl
 Run `bot.py` to run the bot. If using pipenv:
 
 ```bash
-pipenv run python ./brotherchris/bot.py
+pipenv run start
 ```
 
 otherwise
 
 ```bash
-python ./brotherchris/bot.py
+python -m brotherchris
 ```
