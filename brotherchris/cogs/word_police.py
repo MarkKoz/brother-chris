@@ -11,7 +11,7 @@ from brotherchris.cogs import utils
 log: logging.Logger = logging.getLogger(__name__)
 
 
-class WordPolice:
+class WordPolice(commands.Cog):
     """
     Sends a message with word suggestions when a blacklisted word is found in a
     sent message.
@@ -100,6 +100,7 @@ class WordPolice:
             f'#{msg.channel.name}'
         )
 
+    @commands.Cog.listener()
     async def on_message(self, msg: discord.Message):
         """
         Called when a :class:message`<discord.Message>` is created and sent to a

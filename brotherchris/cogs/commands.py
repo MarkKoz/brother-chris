@@ -11,7 +11,7 @@ from brotherchris.cogs import utils
 log: logging.Logger = logging.getLogger(__name__)
 
 
-class Commands:
+class Commands(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot: commands.Bot = bot
         self.emoji_pattern = self.get_emoji_pattern()

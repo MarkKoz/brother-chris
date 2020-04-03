@@ -10,7 +10,7 @@ from brotherchris.cogs import utils
 log: logging.Logger = logging.getLogger(__name__)
 
 
-class WordCloud:
+class WordCloud(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot: commands.Bot = bot
 

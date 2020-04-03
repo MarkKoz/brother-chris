@@ -9,7 +9,7 @@ from brotherchris.cogs import utils
 log: logging.Logger = logging.getLogger(__name__)
 
 
-class Welcome:
+class Welcome(commands.Cog):
     """
     Welcomes users welcomed by the Dyno bot.
     """
@@ -18,6 +18,7 @@ class Welcome:
         self.bot: commands.Bot = bot
         self.config: Dict = utils.load_config('Welcome')
 
+    @commands.Cog.listener()
     async def on_message(self, msg: discord.Message):
         """
         Called when a :class:`message<discord.Message>` is created and sent to a
